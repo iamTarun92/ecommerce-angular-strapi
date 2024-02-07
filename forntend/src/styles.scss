@@ -1,1 +1,40 @@
 /* You can add global styles to this file, and also import other style files */
+
+/* Importing Bootstrap SCSS file. */
+@import "./node_modules/bootstrap/scss/bootstrap";
+
+/* Importing Datepicker SCSS file. */
+@import "node_modules/ngx-bootstrap/datepicker/bs-datepicker";
+
+.round-black-btn {
+  border-radius: 4px;
+  background: #212529;
+  color: #fff;
+  padding: 7px 45px;
+  display: inline-block;
+  margin-top: 20px;
+  border: solid 2px #212529;
+  transition: all 0.5s ease-in-out 0s;
+}
+.round-black-btn:hover,
+.round-black-btn:focus {
+  background: transparent;
+  color: #212529;
+  text-decoration: none;
+}
+.count {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 2;
+  font-size: 11px;
+  border-radius: 50%;
+  background: #d60b28;
+  width: 16px;
+  height: 16px;
+  line-height:16px;
+  display: block;
+  text-align: center;
+  color: white;
+  font-weight: bold;
+}
