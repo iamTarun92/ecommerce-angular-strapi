@@ -1,0 +1,33 @@
+<section style="background-color: #eee">
+  <div class="text-center container py-5">
+    <h4 class="mt-4 mb-5"><strong>All Products</strong></h4>
+
+    <div class="row">
+      <div class="col-lg-4 col-md-12 mb-4" *ngFor="let product of allProducts">
+        <div class="card">
+          <div
+            class="bg-image hover-zoom ripple ripple-surface ripple-surface-light p-4"
+            data-mdb-ripple-color="light"
+          >
+            <img
+              [src]="baseUrl + product.attributes.image.data.attributes.url"
+            />
+          </div>
+          <div class="card-body">
+            <a [routerLink]="product.id" class="text-reset">
+              <h5 class="card-title mb-3 text-uppercase">
+                {{ product.attributes.name }}
+              </h5>
+            </a>
+            <div class="mb-3">
+              <h2> ₹{{ product.attributes.price }} </h2>
+              <del>{{ product.attributes.specialPrice }}</del>
+              <span> 10% off</span>
+            </div>
+            <button class="round-black-btn" (click)="addToCart(product)">Add to Cart</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
