@@ -6,9 +6,10 @@ const routes: Routes = [
   {
     path: '', component: FeatureModuleComponent,
     children: [
-      { path: 'product', loadChildren: () => import('./product/product.module').then(m => m.ProductModule) }
+      { path: ':category/:categoryId', loadChildren: () => import('./product/product.module').then(m => m.ProductModule) },
+      { path: '', loadChildren: () => import('./category/category.module').then(m => m.CategoryModule) }
     ]
-  }
+  },
 ];
 
 @NgModule({

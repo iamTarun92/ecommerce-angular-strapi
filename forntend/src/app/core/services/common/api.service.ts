@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
+import { ProductRoot } from '../../models/product';
+import { CategoriesRoot } from '../../models/categories';
 
 
 @Injectable({
@@ -20,13 +22,13 @@ export class ApiService {
     getSessionToken() {
         return localStorage.getItem('session_token');
     }
-    fetchProducts(): Observable<any> {
+    fetchProducts(): Observable<ProductRoot> {
         const token = this.getSessionToken();
         const headers = new HttpHeaders({
             'Authorization': `Bearer ${token}`
         });
         const url = '/products?populate=*'
-        return this.http.get(this.baseUrl + url, { headers })
+        return this.http.get(this.baseUrl + url, { headers }).pipe(map(data => data as ProductRoot))
     }
     fetchProductById(id: string): Observable<any> {
         const token = this.getSessionToken();
@@ -35,5 +37,21 @@ export class ApiService {
         });
         const url = `/products/${id}?populate=*`
         return this.http.get(this.baseUrl + url, { headers })
+    }
+    fetchProductByCategory(categoryId: string): Observable<any> {
+        const token = this.getSessionToken();
+        const headers = new HttpHeaders({
+            'Authorization': `Bearer ${token}`
+        });
+        const url = `/products?filters[categories][id][$eq]=${categoryId}&populate=*`
+        return this.http.get(this.baseUrl + url, { headers })
+    }
+    fetchCategories(): Observable<CategoriesRoot> {
+        const token = this.getSessionToken();
+        const headers = new HttpHeaders({
+            'Authorization': `Bearer ${token}`
+        });
+        const url = '/categories?populate=*'
+        return this.http.get(this.baseUrl + url, { headers }).pipe(map(data => data as CategoriesRoot))
     }
 }

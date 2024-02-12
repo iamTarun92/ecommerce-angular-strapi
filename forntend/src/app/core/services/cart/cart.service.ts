@@ -1,12 +1,13 @@
-import { Injectable } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 
 
 
 @Injectable({
     providedIn: 'root'
 })
-export class ProductService {
+export class CartService {
     private cartKey = 'addToCart';
+    cartData = new EventEmitter<any>()
 
     // Get cart items from localStorage
     getCartItems(): any[] {
@@ -15,23 +16,28 @@ export class ProductService {
     }
 
     // Add item to cart
-    addItemToCart(item: any): void {
+    addItemToCart(product: any): void {
         let cartItems = this.getCartItems();
-        cartItems.push(item);
+        cartItems.push(product);
         localStorage.setItem(this.cartKey, JSON.stringify(cartItems));
+        this.cartData.emit(cartItems)
     }
 
     // Remove item from cart
-    removeItemFromCart(index: number): void {
+    removeItemFromCart(productId: number): void {
         let cartItems = this.getCartItems();
-        if (index > -1 && index < cartItems.length) {
-            cartItems.splice(index, 1);
+        cartItems = cartItems.filter((item) => item.id !== productId);
+        if (cartItems.length) {
             localStorage.setItem(this.cartKey, JSON.stringify(cartItems));
+        } else {
+            this.clearCart(this.cartKey)
         }
+        this.cartData.emit(cartItems)
+
     }
 
     // Clear cart
-    clearCart(): void {
-        localStorage.removeItem(this.cartKey);
+    clearCart(key: string): void {
+        localStorage.removeItem(key);
     }
 }

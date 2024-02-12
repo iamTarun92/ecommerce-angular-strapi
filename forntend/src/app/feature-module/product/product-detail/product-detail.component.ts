@@ -10,7 +10,7 @@ import { ApiService } from 'src/app/core/services/common/api.service';
 export class ProductDetailComponent {
   id: any;
   product: any;
-  quantity = 1
+  quantity = 0
 
   constructor(private apiService: ApiService, private activeRoute: ActivatedRoute, private router: Router) {
   }
@@ -18,10 +18,15 @@ export class ProductDetailComponent {
   ngOnInit(): void {
     this.activeRoute.params.subscribe(data => {
       const id = this.activeRoute.snapshot.params['id']
-      this.apiService.fetchProductById(id).subscribe((res: any) => {
-        this.product = res.data.attributes
-        console.log(this.product);
+      this.quantity = this.selectedCartItem(parseInt(id))?.quantity
 
+      this.apiService.fetchProductById(id).subscribe({
+        next: (res: any) => {
+          this.product = res.data.attributes
+        },
+        error: () => {
+          // this.router.navigate([''])
+        }
       });
     })
   }
@@ -34,5 +39,12 @@ export class ProductDetailComponent {
     if (this.quantity > 0) {
       this.quantity--;
     }
+  }
+
+  selectedCartItem(id: number) {
+    let localCartString = localStorage.getItem('addToCart');
+    if (!localCartString) return false;
+    let localCart = JSON.parse(localCartString);
+    return localCart.find((obj: any) => obj.id === id);
   }
 }
