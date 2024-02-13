@@ -31,9 +31,9 @@ export class AuthService {
   }
 
   logout(): void {
-    localStorage.clear();
+    localStorage.removeItem('authenticated');
+    localStorage.removeItem('session_token');
     this.isAuthenticatedSubject.next(false);
-
   }
 
   isLoggedIn(): Observable<boolean> {
@@ -41,6 +41,6 @@ export class AuthService {
   }
 
   getToken(): string | null {
-    return localStorage.getItem('token');
+    return localStorage.getItem('session_token');
   }
 }

@@ -25,7 +25,9 @@ export class CartComponent implements OnInit {
 
   ngOnInit() {
     this.isLoggedIn$ = this.authService.isLoggedIn();
-    this.checkAuth = this.isLoggedIn$ ? 'checkout' : 'login'
+    this.isLoggedIn$.subscribe({
+      next: (res) => this.checkAuth = res ? '/checkout' : '/login'
+    })
   }
 
 
