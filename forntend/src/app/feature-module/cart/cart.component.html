@@ -57,7 +57,7 @@
                     <div class="col-12 text-end">
                       <button
                         class="btn btn-primary text-uppercase ms-auto"
-                        routerLink="/checkout"
+                        [routerLink]="checkAuth"
                       >
                         Place Order
                       </button>
@@ -104,11 +104,11 @@
             src="https://rukminim2.flixcart.com/www/800/800/promos/16/05/2019/d438a32e-765a-4d8b-b4a6-520b560971e8.png?q=90"
             alt="Card image cap"
           />
-          <ng-container *ngIf="false; else logoutShow">
+          <ng-container *ngIf="isLoggedIn$ | async; else logoutShow">
             <div class="card-body">
               <h5 class="card-title">Your cart is empty!</h5>
               <p class="card-text">Add items to it now.</p>
-              <a class="btn btn-primary" routerLink="/">Shop Now</a>
+              <a class="btn btn-primary" routerLink="/category">Shop Now</a>
             </div>
           </ng-container>
           <ng-template #logoutShow>
@@ -117,7 +117,7 @@
               <p class="card-text">
                 Login to see the items you added previously
               </p>
-              <a class="btn btn-primary" routerLink="/">Login</a>
+              <a class="btn btn-primary" routerLink="/login">Login</a>
             </div>
           </ng-template>
         </div>

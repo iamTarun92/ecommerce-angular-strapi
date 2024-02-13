@@ -10,8 +10,7 @@
           ><strong>info@somedomain.com</strong></span
         >
         <span class="me-3"
-          ><i class="bi bi-phone"></i>
-          <strong>1-800-123-1234</strong></span
+          ><i class="bi bi-phone"></i> <strong>1-800-123-1234</strong></span
         >
       </div>
       <div
@@ -86,14 +85,26 @@
       </ul>
       <ul class="navbar-nav ms-auto">
         <li class="nav-item">
-          <a class="nav-link mx-2 text-uppercase position-relative" routerLink="cart">
+          <a
+            class="nav-link mx-2 text-uppercase position-relative"
+            routerLink="cart"
+          >
             <i class="bi bi-cart"></i>
             <span class="count">{{ cartData.length }}</span>
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link mx-2 text-uppercase" href="#"
-            ><i class="bi bi-person"></i> Account</a
+          <a
+            *ngIf="!(isLoggedIn$ | async)"
+            class="btn btn-primary"
+            routerLink="login"
+            >Login</a
+          >
+          <a
+            *ngIf="isLoggedIn$ | async"
+            class="btn btn-primary"
+            (click)="logOut()"
+            >Log Out</a
           >
         </li>
       </ul>
