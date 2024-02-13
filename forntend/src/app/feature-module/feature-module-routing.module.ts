@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { FeatureModuleComponent } from './feature-module.component';
+import { LoggedInGuard } from '../core/guards/logged-in.guard';
 
 const routes: Routes = [
   {
@@ -12,7 +13,7 @@ const routes: Routes = [
       { path: 'checkout', loadChildren: () => import('./checkout/checkout.module').then(m => m.CheckoutModule) },
     ]
   },
-  { path: '', loadChildren: () => import('./authentication/authentication.module').then(m => m.AuthenticationModule) },
+  { path: '', canActivate:[LoggedInGuard], loadChildren: () => import('./authentication/authentication.module').then(m => m.AuthenticationModule) },
 ];
 
 @NgModule({
