@@ -42,7 +42,7 @@ export class ProductDetailComponent {
   }
 
   selectedCartItem(id: number) {
-    let localCartString = localStorage.getItem('addToCart');
+    let localCartString = localStorage.getItem('cartItems');
     if (!localCartString) return false;
     let localCart = JSON.parse(localCartString);
     return localCart.find((obj: any) => obj.id === id);

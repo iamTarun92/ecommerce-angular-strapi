@@ -40,7 +40,7 @@
               </div>
               <button
                 class="round-black-btn"
-                (click)="removeToCart(product.id)"
+                (click)="removeFromCart(product.id)"
                 *ngIf="checkIfExists(product.id); else elseBlock"
               >
                 Remove to Cart

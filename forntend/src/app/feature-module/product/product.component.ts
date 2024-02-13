@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { isNumber } from '@ng-bootstrap/ng-bootstrap/util/util';
 import { ApiService, CartService } from 'src/app/core/core.index';
 
 @Component({
@@ -30,20 +29,16 @@ export class ProductComponent {
   }
 
   addToCart(product: any) {
-    const obj = {
-      ...product,
-      quantity: 1
-    }
-    this.product.addItemToCart(obj)
-    // alert('Product added to cart.')
+    product.quantity = 1
+    this.product.addItemToCart(product)
   }
 
-  removeToCart(productId: number) {
+  removeFromCart(productId: number) {
     this.product.removeItemFromCart(productId)
   }
 
   checkIfExists(id: string): boolean {
-    let localCart = localStorage.getItem('addToCart')
+    let localCart = localStorage.getItem('cartItems')
     if (localCart) {
       return JSON.parse(localCart).some((element: any) => element.id === id)
     }

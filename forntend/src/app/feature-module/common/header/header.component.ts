@@ -8,18 +8,14 @@ import { CartService } from 'src/app/core/core.index';
 })
 export class HeaderComponent {
   cartData: any;
-  constructor(private prdService: CartService) {
-    this.cartData = this.getCartItems()
-
-    prdService.cartData.subscribe({
+  constructor(private cartService: CartService) {
+    cartService.loadCart()
+    this.cartData = cartService.getCartItems()
+    cartService.cartData.subscribe({
       next: (res: any) => {
         this.cartData = res
       }
     })
 
-  }
-  getCartItems(): any[] {
-    const cartItems = localStorage.getItem('addToCart');
-    return cartItems ? JSON.parse(cartItems) : [];
   }
 }
