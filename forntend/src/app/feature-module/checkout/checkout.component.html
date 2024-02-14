@@ -76,20 +76,20 @@
                   <label> Address: </label>
                   <input
                     type="text"
-                    formControlName="addressLine1"
+                    formControlName="address"
                     class="form-control"
                     required
                   />
                   <div
                     *ngIf="
-                      billingAddressForm.get('addressLine1')?.invalid &&
-                      billingAddressForm.get('addressLine1')?.touched
+                      billingAddressForm.get('address')?.invalid &&
+                      billingAddressForm.get('address')?.touched
                     "
                   >
                     <span
                       *ngIf="
                         billingAddressForm
-                          .get('addressLine1')
+                          .get('address')
                           ?.hasError('required')
                       "
                       >Address Line 1 is required</span
@@ -173,6 +173,19 @@
                     </div>
                   </div>
                 </div>
+                <div class="form-check mb-2">
+                  <input
+                    type="checkbox"
+                    name="isDelivery"
+                    class="form-check-input"
+                    id="exampleCheck1"
+                    [value]="isDelivery"
+                    (change)="copyBillingAddressToDelivery($event)"
+                  />
+                  <label class="form-check-label" for="exampleCheck1"
+                    >Delivery address same as the billing address</label
+                  >
+                </div>
               </form>
             </div>
           </div>
@@ -243,20 +256,20 @@
                   <label> Address: </label>
                   <input
                     type="text"
-                    formControlName="addressLine1"
+                    formControlName="address"
                     class="form-control"
                     required
                   />
                   <div
                     *ngIf="
-                      deliveryAddressForm.get('addressLine1')?.invalid &&
-                      deliveryAddressForm.get('addressLine1')?.touched
+                      deliveryAddressForm.get('address')?.invalid &&
+                      deliveryAddressForm.get('address')?.touched
                     "
                   >
                     <span
                       *ngIf="
                         deliveryAddressForm
-                          .get('addressLine1')
+                          .get('address')
                           ?.hasError('required')
                       "
                       >Address Line 1 is required</span
@@ -341,19 +354,6 @@
                       >
                     </div>
                   </div>
-                </div>
-                <div class="form-check mb-2">
-                  <input
-                    type="checkbox"
-                    name="isDelivery"
-                    class="form-check-input"
-                    [(ngModel)]="isDelivery"
-                    [value]="isDelivery"
-                    (change)="copyBillingAddressToDelivery($event)"
-                  />
-                  <label class="form-check-label" for="exampleCheck1"
-                    >Same as Delivery Address</label
-                  >
                 </div>
               </form>
             </div>

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, map } from 'rxjs';
+import { Observable, map, tap } from 'rxjs';
 import { ProductRoot } from '../../models/product';
 import { CategoriesRoot } from '../../models/categories';
 
@@ -53,5 +53,9 @@ export class ApiService {
         });
         const url = '/categories?populate=*'
         return this.http.get(this.baseUrl + url).pipe(map(data => data as CategoriesRoot))
+    }
+    addOrder(orderData: any): Observable<any> {
+        const url = '/orders'
+        return this.http.post<any>(`${this.baseUrl}/orders`, orderData)
     }
 }

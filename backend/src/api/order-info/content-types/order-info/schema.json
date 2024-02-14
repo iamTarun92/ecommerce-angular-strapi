@@ -1,0 +1,18 @@
+{
+  "kind": "collectionType",
+  "collectionName": "order_infos",
+  "info": {
+    "singularName": "order-info",
+    "pluralName": "order-infos",
+    "displayName": "OrderInfo"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "address": {
+      "type": "json"
+    }
+  }
+}
