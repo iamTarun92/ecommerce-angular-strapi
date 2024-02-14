@@ -17,12 +17,24 @@
         class="col-lg-6 col-md-6 col-sm-12 col-xs-12 d-none d-lg-block d-md-block-d-sm-block d-xs-none text-end"
       >
         <span class="me-3"
-          ><i class="bi bi-basket"></i
+          ><i class="bi bi-basket me-2"></i
           ><a class="text-muted" href="#"> Shipping</a></span
         >
         <span class="me-3"
-          ><i class="fa-solid fa-file text-muted me-2"></i
+          ><i class="bi bi-safe me-2"></i
           ><a class="text-muted" href="#">Policy</a></span
+        >
+        <a
+          *ngIf="!(isLoggedIn$ | async)"
+          class="btn btn-primary"
+          routerLink="login"
+          >Login</a
+        >
+        <a
+          *ngIf="isLoggedIn$ | async"
+          class="btn btn-primary"
+          (click)="logOut()"
+          >Log Out</a
         >
       </div>
     </div>
@@ -94,17 +106,8 @@
           </a>
         </li>
         <li class="nav-item">
-          <a
-            *ngIf="!(isLoggedIn$ | async)"
-            class="btn btn-primary"
-            routerLink="login"
-            >Login</a
-          >
-          <a
-            *ngIf="isLoggedIn$ | async"
-            class="btn btn-primary"
-            (click)="logOut()"
-            >Log Out</a
+          <a class="nav-link mx-2 text-uppercase" href="#"
+            ><i class="bi bi-person"></i> Account</a
           >
         </li>
       </ul>

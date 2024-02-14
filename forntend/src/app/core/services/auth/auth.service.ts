@@ -11,10 +11,11 @@ export class AuthService {
   private baseUrl = 'http://localhost:1337/api';
 
   private isAuthenticatedSubject: BehaviorSubject<boolean>;
-  public isAuthenticated: Observable<boolean>;
+  public currentuser: BehaviorSubject<string>;
 
   constructor(private http: HttpClient) {
-    this.isAuthenticatedSubject = new BehaviorSubject<boolean>(localStorage.getItem('authenticated') ? true : false); this.isAuthenticated = this.isAuthenticatedSubject.asObservable();
+    this.isAuthenticatedSubject = new BehaviorSubject<boolean>(localStorage.getItem('authenticated') ? true : false);
+    this.currentuser = new BehaviorSubject<string>(localStorage.getItem('user') || '');
   }
 
 
@@ -23,6 +24,7 @@ export class AuthService {
       tap(response => {
         if (response.jwt) {
           localStorage.setItem('session_token', response.jwt);
+          localStorage.setItem('user', JSON.stringify(response.user));
           localStorage.setItem('authenticated', 'true');
           this.isAuthenticatedSubject.next(true);
         }
@@ -33,14 +35,18 @@ export class AuthService {
   logout(): void {
     localStorage.removeItem('authenticated');
     localStorage.removeItem('session_token');
+    localStorage.removeItem('user');
     this.isAuthenticatedSubject.next(false);
   }
 
   isLoggedIn(): Observable<boolean> {
-    return this.isAuthenticated
+    return this.isAuthenticatedSubject.asObservable()
   }
 
   getToken(): string | null {
     return localStorage.getItem('session_token');
+  }
+  getUser(): string | null {
+    return localStorage.getItem('user');
   }
 }

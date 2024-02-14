@@ -1,1 +1,439 @@
-<p>checkout works!</p>
+<div class="container my-5">
+  <div class="row gy-4">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header text-uppercase fw-bold">Login</div>
+        <div class="card-body">
+          <p class="card-title">
+            {{ currentUser.username }} +91{{ currentUser.phone }}
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="col-12">
+      <div class="row">
+        <div class="col-6">
+          <div class="card">
+            <div class="card-header text-uppercase fw-bold">
+              Billing Address
+            </div>
+            <div class="card-body">
+              <form [formGroup]="billingAddressForm">
+                <div class="form-group mb-2">
+                  <label> Full Name: </label>
+                  <input
+                    type="text"
+                    formControlName="fullName"
+                    placeholder="name"
+                    class="form-control"
+                    required
+                  />
+                  <div
+                    *ngIf="
+                      billingAddressForm.get('fullName')?.invalid &&
+                      billingAddressForm.get('fullName')?.touched
+                    "
+                  >
+                    <span
+                      *ngIf="
+                        billingAddressForm.get('fullName')?.hasError('required')
+                      "
+                      >Full name is required</span
+                    >
+                  </div>
+                </div>
+                <div class="form-group mb-2">
+                  <label> Phone: </label>
+                  <input
+                    type="text"
+                    formControlName="phone"
+                    pattern="[0-9]{10}"
+                    placeholder="10-digit mobile number"
+                    class="form-control"
+                    required
+                  />
+                  <div
+                    *ngIf="
+                      billingAddressForm.get('phone')?.invalid &&
+                      billingAddressForm.get('phone')?.touched
+                    "
+                  >
+                    <span
+                      *ngIf="
+                        billingAddressForm.get('phone')?.hasError('required')
+                      "
+                      >Phone is required</span
+                    >
+                    <span
+                      *ngIf="
+                        billingAddressForm.get('phone')?.hasError('pattern')
+                      "
+                      >Phone must be 10 digits</span
+                    >
+                  </div>
+                </div>
+                <div class="form-group mb-2">
+                  <label> Address: </label>
+                  <input
+                    type="text"
+                    formControlName="addressLine1"
+                    class="form-control"
+                    required
+                  />
+                  <div
+                    *ngIf="
+                      billingAddressForm.get('addressLine1')?.invalid &&
+                      billingAddressForm.get('addressLine1')?.touched
+                    "
+                  >
+                    <span
+                      *ngIf="
+                        billingAddressForm
+                          .get('addressLine1')
+                          ?.hasError('required')
+                      "
+                      >Address Line 1 is required</span
+                    >
+                  </div>
+                </div>
+                <div class="d-flex gap-4 mb-2">
+                  <div class="form-group">
+                    <label> City: </label>
+                    <input
+                      type="text"
+                      formControlName="city"
+                      required
+                      class="form-control"
+                    />
+                    <div
+                      *ngIf="
+                        billingAddressForm.get('city')?.invalid &&
+                        billingAddressForm.get('city')?.touched
+                      "
+                    >
+                      <span
+                        *ngIf="
+                          billingAddressForm.get('city')?.hasError('required')
+                        "
+                        >City is required</span
+                      >
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label> State: </label>
+                    <input
+                      type="text"
+                      formControlName="state"
+                      required
+                      class="form-control"
+                    />
+                    <div
+                      *ngIf="
+                        billingAddressForm.get('state')?.invalid &&
+                        billingAddressForm.get('state')?.touched
+                      "
+                    >
+                      <span
+                        *ngIf="
+                          billingAddressForm.get('state')?.hasError('required')
+                        "
+                        >State is required</span
+                      >
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label> Zip Code: </label>
+                    <input
+                      type="text"
+                      formControlName="zipCode"
+                      pattern="[0-9]{5}"
+                      class="form-control"
+                      required
+                    />
+                    <div
+                      *ngIf="
+                        billingAddressForm.get('zipCode')?.invalid &&
+                        billingAddressForm.get('zipCode')?.touched
+                      "
+                    >
+                      <span
+                        *ngIf="
+                          billingAddressForm
+                            .get('zipCode')
+                            ?.hasError('required')
+                        "
+                        >Zip Code is required</span
+                      >
+                      <span
+                        *ngIf="
+                          billingAddressForm.get('zipCode')?.hasError('pattern')
+                        "
+                        >Zip Code must be 5 digits</span
+                      >
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="card">
+            <div class="card-header text-uppercase fw-bold">
+              Delivery Address
+            </div>
+            <div class="card-body">
+              <form [formGroup]="deliveryAddressForm">
+                <div class="form-group mb-2">
+                  <label> Full Name: </label>
+                  <input
+                    type="text"
+                    formControlName="fullName"
+                    placeholder="name"
+                    class="form-control"
+                    required
+                  />
+                  <div
+                    *ngIf="
+                      deliveryAddressForm.get('fullName')?.invalid &&
+                      deliveryAddressForm.get('fullName')?.touched
+                    "
+                  >
+                    <span
+                      *ngIf="
+                        deliveryAddressForm
+                          .get('fullName')
+                          ?.hasError('required')
+                      "
+                      >Full name is required</span
+                    >
+                  </div>
+                </div>
+                <div class="form-group mb-2">
+                  <label> Phone: </label>
+                  <input
+                    type="text"
+                    formControlName="phone"
+                    pattern="[0-9]{10}"
+                    placeholder="10-digit mobile number"
+                    class="form-control"
+                    required
+                  />
+                  <div
+                    *ngIf="
+                      deliveryAddressForm.get('phone')?.invalid &&
+                      deliveryAddressForm.get('phone')?.touched
+                    "
+                  >
+                    <span
+                      *ngIf="
+                        deliveryAddressForm.get('phone')?.hasError('required')
+                      "
+                      >Phone is required</span
+                    >
+                    <span
+                      *ngIf="
+                        deliveryAddressForm.get('phone')?.hasError('pattern')
+                      "
+                      >Phone must be 10 digits</span
+                    >
+                  </div>
+                </div>
+                <div class="form-group mb-2">
+                  <label> Address: </label>
+                  <input
+                    type="text"
+                    formControlName="addressLine1"
+                    class="form-control"
+                    required
+                  />
+                  <div
+                    *ngIf="
+                      deliveryAddressForm.get('addressLine1')?.invalid &&
+                      deliveryAddressForm.get('addressLine1')?.touched
+                    "
+                  >
+                    <span
+                      *ngIf="
+                        deliveryAddressForm
+                          .get('addressLine1')
+                          ?.hasError('required')
+                      "
+                      >Address Line 1 is required</span
+                    >
+                  </div>
+                </div>
+                <div class="d-flex gap-4 mb-2">
+                  <div class="form-group">
+                    <label> City: </label>
+                    <input
+                      type="text"
+                      formControlName="city"
+                      required
+                      class="form-control"
+                    />
+                    <div
+                      *ngIf="
+                        deliveryAddressForm.get('city')?.invalid &&
+                        deliveryAddressForm.get('city')?.touched
+                      "
+                    >
+                      <span
+                        *ngIf="
+                          deliveryAddressForm.get('city')?.hasError('required')
+                        "
+                        >City is required</span
+                      >
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label> State: </label>
+                    <input
+                      type="text"
+                      formControlName="state"
+                      required
+                      class="form-control"
+                    />
+                    <div
+                      *ngIf="
+                        deliveryAddressForm.get('state')?.invalid &&
+                        deliveryAddressForm.get('state')?.touched
+                      "
+                    >
+                      <span
+                        *ngIf="
+                          deliveryAddressForm.get('state')?.hasError('required')
+                        "
+                        >State is required</span
+                      >
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label> Zip Code: </label>
+                    <input
+                      type="text"
+                      formControlName="zipCode"
+                      pattern="[0-9]{5}"
+                      class="form-control"
+                      required
+                    />
+                    <div
+                      *ngIf="
+                        deliveryAddressForm.get('zipCode')?.invalid &&
+                        deliveryAddressForm.get('zipCode')?.touched
+                      "
+                    >
+                      <span
+                        *ngIf="
+                          deliveryAddressForm
+                            .get('zipCode')
+                            ?.hasError('required')
+                        "
+                        >Zip Code is required</span
+                      >
+                      <span
+                        *ngIf="
+                          deliveryAddressForm
+                            .get('zipCode')
+                            ?.hasError('pattern')
+                        "
+                        >Zip Code must be 5 digits</span
+                      >
+                    </div>
+                  </div>
+                </div>
+                <div class="form-check mb-2">
+                  <input
+                    type="checkbox"
+                    name="isDelivery"
+                    class="form-check-input"
+                    [(ngModel)]="isDelivery"
+                    [value]="isDelivery"
+                    (change)="copyBillingAddressToDelivery($event)"
+                  />
+                  <label class="form-check-label" for="exampleCheck1"
+                    >Same as Delivery Address</label
+                  >
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header text-uppercase fw-bold">Order Summary</div>
+        <div class="card-body">
+          <div *ngFor="let product of cartItems; let i = index">
+            <div class="mb-4 d-flex align-items-center">
+              <div class="col-md-2 col-lg-2 col-xl-2">
+                <img
+                  [src]="baseUrl + product.attributes.image.data.attributes.url"
+                  style="height: 100px"
+                  alt="Cotton T-shirt"
+                />
+              </div>
+              <div class="col-md-3 col-lg-3 col-xl-3">
+                <h6 class="text-muted text-uppercase">
+                  {{ product.attributes.name }}
+                </h6>
+              </div>
+              <div class="col-md-3 col-lg-3 col-xl-2 d-flex align-items-center">
+                <span class="me-2">{{ product.attributes.price }}</span>
+                <span class="me-2">x</span>
+                <div>
+                  <input
+                    min="1"
+                    name="quantity"
+                    [value]="product.quantity"
+                    [(ngModel)]="product.quantity"
+                    type="number"
+                    class="form-control form-control-sm"
+                  />
+                </div>
+              </div>
+              <div class="col-md-3 col-lg-2 col-xl-2 offset-lg-1">
+                <h6 class="mb-0" #subTotalWrap>
+                  ₹{{ product.quantity * product.attributes.price }}
+                </h6>
+              </div>
+            </div>
+
+            <hr class="my-4" *ngIf="i < cartItems.length - 1" />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header text-uppercase fw-bold">Payment options</div>
+        <div class="card-body">
+          <div *ngFor="let option of paymentOptions">
+            <div class="form-group mb-2">
+              <label [for]="option">
+                <input
+                  type="radio"
+                  [(ngModel)]="selectedPaymentOption"
+                  [value]="option"
+                  [name]="option"
+                />
+                <span class="ms-2">{{ option }}</span></label
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <button
+        class="btn btn-primary float-end"
+        [disabled]="!isCheckedAddressForm"
+        (click)="isOrderConfirm()"
+      >
+        Confirm Order
+      </button>
+    </div>
+  </div>
+</div>

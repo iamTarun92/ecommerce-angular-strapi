@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ApiService } from 'src/app/core/core.index';
-import { AuthService } from 'src/app/core/helper/auth.service';
+import { AuthService } from 'src/app/core/services/auth/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -16,23 +16,22 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     this.loginForm = this.fb.group({
-      email: ['', [Validators.required]],
+      identifier: ['', [Validators.required]],
       password: ['', [Validators.required]]
     });
   }
 
   loginFormSubmit() {
-    const credentials = {
-      identifier: this.loginForm.get('email')?.value,
-      password: this.loginForm.get('password')?.value
-    };
-
-    this.authService.login(credentials).subscribe({
+    this.authService.login(this.loginForm.value).subscribe({
       next: (response) => {
+        const { user } = response
+        console.log(user);
+        
         this.loginForm.reset()
         this.router.navigate(['category'])
       },
-      error: (error) => alert('Please contact admin.')
+      error: (error) => alert('Error: ' + error.error.error.message)
+
     })
   }
 }

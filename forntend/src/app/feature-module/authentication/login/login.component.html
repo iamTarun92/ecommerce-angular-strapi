@@ -2,15 +2,15 @@
   <div class="row justify-content-center">
     <form [formGroup]="loginForm" (ngSubmit)="loginFormSubmit()" class="col-5">
       <div class="form-group">
-        <label for="username">Email <span class="text-danger">*</span></label>
+        <label for="identifier">Email <span class="text-danger">*</span></label>
         <input
           type="text"
-          id="email"
-          formControlName="email"
+          id="identifier"
+          formControlName="identifier"
           class="form-control"
         />
         <div
-          *ngIf="loginForm.get('email')?.hasError('required')"
+          *ngIf="loginForm.get('identifier')?.hasError('required')"
           class="text-danger"
         >
           Email is required.

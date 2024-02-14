@@ -12,9 +12,9 @@ const routes: Routes = [
       { path: ':category/:categoryId', loadChildren: () => import('./product/product.module').then(m => m.ProductModule) },
       { path: 'cart', loadChildren: () => import('./cart/cart.module').then(m => m.CartModule) },
       { path: 'checkout', canActivate: [AuthGuard], loadChildren: () => import('./checkout/checkout.module').then(m => m.CheckoutModule) },
+      { path: '', canActivate: [LoggedInGuard], loadChildren: () => import('./authentication/authentication.module').then(m => m.AuthenticationModule) },
     ]
   },
-  { path: '', canActivate: [LoggedInGuard], loadChildren: () => import('./authentication/authentication.module').then(m => m.AuthenticationModule) },
 ];
 
 @NgModule({
