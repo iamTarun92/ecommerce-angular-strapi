@@ -88,9 +88,7 @@
                   >
                     <span
                       *ngIf="
-                        billingAddressForm
-                          .get('address')
-                          ?.hasError('required')
+                        billingAddressForm.get('address')?.hasError('required')
                       "
                       >Address Line 1 is required</span
                     >
@@ -268,9 +266,7 @@
                   >
                     <span
                       *ngIf="
-                        deliveryAddressForm
-                          .get('address')
-                          ?.hasError('required')
+                        deliveryAddressForm.get('address')?.hasError('required')
                       "
                       >Address Line 1 is required</span
                     >
@@ -410,16 +406,16 @@
       <div class="card">
         <div class="card-header text-uppercase fw-bold">Payment options</div>
         <div class="card-body">
-          <div *ngFor="let option of paymentOptions">
+          <div *ngFor="let method of paymentMethods">
             <div class="form-group mb-2">
-              <label [for]="option">
+              <label [for]="method.name">
                 <input
                   type="radio"
-                  [(ngModel)]="selectedPaymentOption"
-                  [value]="option"
-                  [name]="option"
+                  [(ngModel)]="selectedPaymentMethod"
+                  [value]="method.value"
+                  [id]="method.name"
                 />
-                <span class="ms-2">{{ option }}</span></label
+                <span class="ms-2">{{ method.name }}</span></label
               >
             </div>
           </div>

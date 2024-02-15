@@ -13,7 +13,6 @@ export class CartComponent implements OnInit {
 
   baseUrl = 'http://localhost:1337'
   ItemTotalPrice = 0
-  shipingPrice = 50
   isLoggedIn$!: Observable<boolean>;
   cartItems: any[] = [];
   checkAuth = ''
@@ -36,7 +35,7 @@ export class CartComponent implements OnInit {
     this.ItemTotalPrice = this.cartService.getTotalPrice(this.cartItems)
   }
   get totalPrice() {
-    return this.shipingPrice + this.ItemTotalPrice
+    return this.ItemTotalPrice
   }
   changeSubtotal(item: any, index: any) {
     this.cartService.saveCart();

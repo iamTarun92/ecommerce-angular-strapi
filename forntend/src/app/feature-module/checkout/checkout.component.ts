@@ -16,8 +16,10 @@ export class CheckoutComponent implements OnInit {
   deliveryAddressForm!: FormGroup
   cartItems: any[] = [];
   currentUser: any
-  paymentOptions = ['Cash on delivery'];
-  selectedPaymentOption = ''
+  paymentMethods = [
+    { id: 1, name: 'Cash on delivery', value: 'COD' },
+  ];
+  selectedPaymentMethod = null;
   isDelivery = false
 
   constructor(private fb: FormBuilder, private authService: AuthService, private cartService: CartService, private router: Router, private apiService: ApiService) { }
@@ -43,6 +45,10 @@ export class CheckoutComponent implements OnInit {
     });
   }
 
+  onSelectPaymentMethod(method: any) {
+    this.selectedPaymentMethod = method.value;
+  }
+
   copyBillingAddressToDelivery(event: any) {
     if (event.target.checked) {
       this.deliveryAddressForm.patchValue(this.billingAddressForm.value);
@@ -52,12 +58,12 @@ export class CheckoutComponent implements OnInit {
   }
 
   get isCheckedAddressForm() {
-    return this.billingAddressForm.valid && this.deliveryAddressForm.valid && this.selectedPaymentOption
+    return this.billingAddressForm.valid && this.deliveryAddressForm.valid && this.selectedPaymentMethod
   }
 
   isOrderConfirm() {
-    const orderId = Math.floor(Math.random() * 1000)
-    const transactionId = Math.floor(Math.random() * 1000)
+    const orderId = Math.floor(Math.random() * 1000) + '-' + Math.floor(new Date().getTime() / 1000);
+    const transactionId = Math.floor(Math.random() * 1000) + '-' + Math.floor(new Date().getTime() / 1000);
     const address = {
       billing: this.billingAddressForm.value,
       deliver: this.deliveryAddressForm.value,
@@ -66,7 +72,7 @@ export class CheckoutComponent implements OnInit {
       "data": {
         "email": this.currentUser.email,
         "orderId": orderId.toString(),
-        "paymentInfo": "",
+        "paymentMethod": this.selectedPaymentMethod,
         "products": this.cartItems,
         "address": address,
         "name": this.billingAddressForm.value.fullName,

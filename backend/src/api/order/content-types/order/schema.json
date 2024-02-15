@@ -20,7 +20,7 @@
       "type": "uid",
       "required": true
     },
-    "paymentInfo": {
+    "paymentMethod": {
       "type": "json"
     },
     "products": {
@@ -40,6 +40,10 @@
     },
     "address": {
       "type": "json"
+    },
+    "shipingAmt": {
+      "type": "integer",
+      "default": 100
     }
   }
 }
