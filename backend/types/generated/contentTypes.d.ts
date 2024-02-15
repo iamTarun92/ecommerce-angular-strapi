@@ -420,6 +420,7 @@ export interface ApiOrderOrder extends Schema.CollectionType {
     amount: Attribute.String & Attribute.Required;
     address: Attribute.JSON;
     shipingAmt: Attribute.Integer & Attribute.DefaultTo<100>;
+    orderDate: Attribute.DateTime & Attribute.Required;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;

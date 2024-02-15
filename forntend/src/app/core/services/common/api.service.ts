@@ -58,4 +58,8 @@ export class ApiService {
         const url = '/orders'
         return this.http.post<any>(`${this.baseUrl}/orders`, orderData)
     }
+    getOrderByUserId(email: string): Observable<any> {
+        const url = `/orders?filters[email][$eq]=${email}`
+        return this.http.get<any>(this.baseUrl + url)
+    }
 }

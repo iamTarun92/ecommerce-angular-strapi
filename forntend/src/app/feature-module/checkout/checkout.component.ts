@@ -85,7 +85,7 @@ export class CheckoutComponent implements OnInit {
         alert('Your order is placed.')
         localStorage.removeItem('cartItems')
         this.cartService.loadCart()
-        this.router.navigate(['cart'])
+        this.router.navigate(['orders'])
       },
       error: (error) => alert('Error: ' + error.error.error.message)
 

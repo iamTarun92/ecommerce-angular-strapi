@@ -1,0 +1,81 @@
+<section class="h-100 gradient-custom">
+  <div class="container py-5 h-100">
+    <div class="row d-flex justify-content-center align-items-center h-100">
+      <div class="col-lg-10 col-xl-8">
+        <div class="card" style="border-radius: 10px">
+          <div class="card-header px-4 py-5">
+            <h5 class="text-muted mb-0">
+              Thanks for your Order,
+              <span style="color: #a8729a">{{ currentUser.username }}</span
+              >!
+            </h5>
+          </div>
+          <div class="card-body p-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+              <p class="lead fw-normal mb-0" style="color: #a8729a">Receipt</p>
+              <p class="small text-muted mb-0">
+                Receipt Voucher : {{ allOrder[0].attributes.orderId }}
+              </p>
+            </div>
+            <ng-container *ngFor="let order of allOrder">
+              <div
+                class="card shadow-0 border mb-4"
+                *ngFor="let product of order.attributes.products"
+              >
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col-md-2">
+                      <img
+                        [src]="
+                          'http://localhost:1337' +
+                          product.attributes.image.data.attributes.url
+                        "
+                        width="50"
+                        alt="Phone"
+                      />
+                    </div>
+                    <div
+                      class="col-md-3 text-center d-flex justify-content-center align-items-center"
+                    >
+                      <p class="text-muted mb-0 text-uppercase">
+                        {{ product.attributes.name }}
+                      </p>
+                    </div>
+                    <div
+                      class="col-md-2 text-center d-flex justify-content-center align-items-center"
+                    >
+                      <p class="text-muted mb-0 small">
+                        Qty: {{ product.quantity }}
+                      </p>
+                    </div>
+                    <div
+                      class="align-items-center col-md-5 d-flex justify-content-end"
+                    >
+                      <p class="text-muted mb-0 small">
+                        {{ product.attributes.price * product.quantity }}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+
+            <div class="d-flex justify-content-between pt-2">
+              <p class="fw-bold mb-0">Order Details</p>
+              <p class="text-muted mb-0">
+                <span class="fw-bold me-4">Total Paid:</span>
+                {{ getTotalPrice() }}
+              </p>
+            </div>
+
+            <div class="d-flex justify-content-between pt-2">
+              <p class="text-muted mb-0">
+                Invoice Number : {{ allOrder[0].attributes.transactionId }}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
