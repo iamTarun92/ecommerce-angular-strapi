@@ -46,8 +46,25 @@
       "default": 100
     },
     "orderDate": {
-      "type": "datetime",
-      "required": true
+      "type": "date",
+      "required": false,
+      "default": "2024-02-16"
+    },
+    "paymentStatus": {
+      "type": "enumeration",
+      "enum": [
+        "pending",
+        "success"
+      ],
+      "default": "pending"
+    },
+    "orderStatus": {
+      "type": "enumeration",
+      "enum": [
+        "processing",
+        "delivered"
+      ],
+      "default": "processing"
     }
   }
 }

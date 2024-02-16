@@ -62,4 +62,12 @@ export class ApiService {
         const url = `/orders?filters[email][$eq]=${email}`
         return this.http.get<any>(this.baseUrl + url)
     }
+    fetchByOrderId(orderId: string): Observable<any> {
+        const url = `/orders?filters[orderId][$eq]=${orderId}`
+        return this.http.get<any>(this.baseUrl + url)
+    }
+    getAllOrders(): Observable<any> {
+        const url = `/orders`
+        return this.http.get<any>(this.baseUrl + url)
+    }
 }

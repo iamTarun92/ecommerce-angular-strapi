@@ -6,11 +6,7 @@
       <div class="col-lg-3 col-md-12 mb-4" *ngFor="let category of categories">
         <div class="card">
           <div class="p-4">
-            <a
-              [routerLink]="
-                '/'+category.attributes.name.toLowerCase() + '/' + category.id
-              "
-            >
+            <a [routerLink]="'/product/' + category.id">
               <img
                 [src]="
                   'http://localhost:1337' +

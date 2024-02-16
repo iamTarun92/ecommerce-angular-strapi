@@ -18,7 +18,7 @@ const routes: Routes = [
         loadChildren: () => import('./category/category.module').then(m => m.CategoryModule)
       },
       {
-        path: ':category/:categoryId',
+        path: 'product',
         loadChildren: () => import('./product/product.module').then(m => m.ProductModule)
       },
       {
@@ -33,7 +33,7 @@ const routes: Routes = [
       {
         path: 'orders',
         canActivate: [AuthGuard],
-        loadChildren: () => import('./orders/orders.module').then(m => m.OrdersModule)
+        loadChildren: () => import('./order/order.module').then(m => m.OrderModule)
       },
     ]
   },

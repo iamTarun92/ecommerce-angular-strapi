@@ -2,17 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { OrdersComponent } from './orders.component';
 
-const routes: Routes = [
-  {
-    path: '', component: OrdersComponent,
-    children: [
-      {
-        path: '',
-        loadChildren: () => import('./order-list/order-list.module').then(m => m.OrderListModule)
-      }
-    ]
-  },
-];
+const routes: Routes = [{ path: '', component: OrdersComponent }];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],

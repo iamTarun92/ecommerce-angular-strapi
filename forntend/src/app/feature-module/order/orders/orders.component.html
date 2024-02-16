@@ -1,0 +1,43 @@
+<section>
+  <div class="container py-5">
+    <div class="row d-flex">
+      <div class="col-12">
+        <table class="table">
+          <thead class="table-dark">
+            <tr>
+              <th scope="col">Name</th>
+              <th scope="col">Order Id</th>
+              <th scope="col">Transaction Id</th>
+              <th scope="col">Payment Status</th>
+              <th scope="col">Order Status</th>
+              <th scope="col">Date</th>
+              <th scope="col">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let order of allOrder">
+              <td>{{ order.attributes.name }}</td>
+              <td>{{ order.attributes.orderId }}</td>
+              <td>{{ order.attributes.transactionId }}</td>
+              <td class="text-capitalize">
+                {{ order.attributes.paymentStatus }}
+              </td>
+              <td class="text-capitalize">
+                {{ order.attributes.orderStatus }}
+              </td>
+              <td class="text-uppercase">{{ order.attributes.orderDate }}</td>
+              <td>
+                <a
+                  class="btn btn-dark"
+                  routerLink="order_details"
+                  [queryParams]="{ 'order_id': order.attributes.orderId }"
+                  >Details</a
+                >
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>

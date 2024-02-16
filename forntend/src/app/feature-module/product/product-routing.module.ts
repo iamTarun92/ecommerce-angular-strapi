@@ -5,12 +5,18 @@ import { ProductComponent } from './product.component';
 const routes: Routes = [
   {
     path: '',
-    component: ProductComponent
+    component: ProductComponent,
+    children: [
+      {
+        path: ':categoryId/:id',
+        loadChildren: () => import('./product-detail/product-detail.module').then(m => m.ProductDetailModule)
+      },
+      {
+        path: ':categoryId',
+        loadChildren: () => import('./product-list/product-list.module').then(m => m.ProductListModule)
+      }
+    ]
   },
-  {
-    path: ':id',
-    loadChildren: () => import('./product-detail/product-detail.module').then(m => m.ProductDetailModule)
-  }
 ];
 
 @NgModule({
