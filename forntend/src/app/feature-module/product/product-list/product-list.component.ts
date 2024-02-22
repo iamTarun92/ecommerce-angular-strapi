@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ApiService, CartService } from 'src/app/core/core.index';
+import { ProductData } from 'src/app/core/models/product';
 
 @Component({
   selector: 'app-product-list',
@@ -8,7 +9,10 @@ import { ApiService, CartService } from 'src/app/core/core.index';
   styleUrls: ['./product-list.component.scss']
 })
 export class ProductListComponent {
-  allProducts: any | undefined
+  parseInt(arg0: string) {
+    throw new Error('Method not implemented.');
+  }
+  allProducts: ProductData[] = []
   baseUrl = 'http://localhost:1337'
   constructor(private apiService: ApiService, private product: CartService, private activeRoute: ActivatedRoute, private router: Router) {
 
@@ -20,6 +24,7 @@ export class ProductListComponent {
       this.apiService.fetchProductByCategory(categoryId).subscribe({
         next: (res: any) => {
           this.allProducts = res?.data
+          console.log(this.allProducts);
         },
         error: () => {
           this.router.navigate([''])
@@ -37,7 +42,7 @@ export class ProductListComponent {
     this.product.removeItemFromCart(productId)
   }
 
-  checkIfExists(id: string): boolean {
+  checkIfExists(id: number): boolean {
     let localCart = localStorage.getItem('cartItems')
     if (localCart) {
       return JSON.parse(localCart).some((element: any) => element.id === id)
@@ -45,19 +50,15 @@ export class ProductListComponent {
     return false
   }
 
-  calculateDiscountPercentage(originalPrice: any, discountedPrice: any) {
-    // Ensure both prices are non-negative
-    if (originalPrice < 0 || discountedPrice < 0) {
-      throw new Error('Prices must be non-negative.');
-    }
-
-    // Calculate the discount amount
-    const discountAmount = originalPrice - discountedPrice;
-
-    // Calculate the discount percentage
-    const discountPercentage = (discountAmount / originalPrice) * 100;
-
-    return discountPercentage;
+  calculateDiscountedPrice(originalPrice: number, discountPercentage: number): number {
+    return originalPrice - (originalPrice * discountPercentage / 100);
   }
 
+  hasFixedPrice(product: any): boolean {
+    return product.attributes.isFixedPrice
+
+  }
+  hasSpecialPrice(product: any): boolean {
+    return !!product.attributes.specialPrice
+  }
 }

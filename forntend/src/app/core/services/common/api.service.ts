@@ -28,7 +28,7 @@ export class ApiService {
             'Authorization': `Bearer ${token}`
         });
         const url = '/products?populate=*'
-        return this.http.get(this.baseUrl + url).pipe(map(data => data as ProductRoot))
+        return this.http.get<ProductRoot>(this.baseUrl + url).pipe(map(data => data as ProductRoot))
     }
     fetchProductById(id: string): Observable<any> {
         const token = this.getSessionToken();
@@ -38,13 +38,13 @@ export class ApiService {
         const url = `/products/${id}?populate=*`
         return this.http.get(this.baseUrl + url)
     }
-    fetchProductByCategory(categoryId: string): Observable<any> {
+    fetchProductByCategory(categoryId: string): Observable<ProductRoot> {
         const token = this.getSessionToken();
         const headers = new HttpHeaders({
             'Authorization': `Bearer ${token}`
         });
         const url = `/products?filters[categories][id][$eq]=${categoryId}&populate=*`
-        return this.http.get(this.baseUrl + url)
+        return this.http.get<ProductRoot>(this.baseUrl + url).pipe(map(data => data as ProductRoot))
     }
     fetchCategories(): Observable<CategoriesRoot> {
         const token = this.getSessionToken();
@@ -52,7 +52,7 @@ export class ApiService {
             'Authorization': `Bearer ${token}`
         });
         const url = '/categories?populate=*'
-        return this.http.get(this.baseUrl + url).pipe(map(data => data as CategoriesRoot))
+        return this.http.get<CategoriesRoot>(this.baseUrl + url).pipe(map(data => data as CategoriesRoot))
     }
     addOrder(orderData: any): Observable<any> {
         const url = '/orders'

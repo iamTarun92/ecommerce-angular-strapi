@@ -29,8 +29,18 @@ export class OrderListComponent implements OnInit {
   getTotalPrice(): number {
     return this.allOrder.reduce((sum: any, product: any) => {
       return sum + product.attributes.products.reduce((subSum: any, subProduct: any) => {
-        return subSum + (parseInt(subProduct.attributes.price) * subProduct.quantity);
+        return subSum + (parseInt(!!subProduct.attributes.specialPrice ? subProduct.attributes.specialPrice : subProduct.attributes.price) * subProduct.quantity);
       }, 0);
     }, 0);
+  }
+
+  hasFixedPrice(product: any): boolean {
+    return product.attributes.isFixedPrice
+  }
+  hasSpecialPrice(product: any): boolean {
+    return !!product.attributes.specialPrice
+  }
+  calculateDiscountedPrice(originalPrice: number, discountPercentage: number): number {
+    return originalPrice - (originalPrice * discountPercentage / 100);
   }
 }

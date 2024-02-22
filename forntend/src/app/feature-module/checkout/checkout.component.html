@@ -377,7 +377,28 @@
                 </h6>
               </div>
               <div class="col-md-3 col-lg-3 col-xl-2 d-flex align-items-center">
-                <span class="me-2">{{ product.attributes.price }}</span>
+                <ng-container
+                  *ngIf="hasSpecialPrice(product); else singlePrice"
+                >
+                  <ng-container *ngIf="hasFixedPrice(product)">
+                    <span class="me-2"
+                      >₹{{ product.attributes.specialPrice }}</span
+                    >
+                  </ng-container>
+                  <ng-container *ngIf="!hasFixedPrice(product)">
+                    <span class="me-2">
+                      ₹{{
+                        calculateDiscountedPrice(
+                          product.attributes.price,
+                          product.attributes.specialPrice
+                        )
+                      }}</span
+                    >
+                  </ng-container>
+                </ng-container>
+                <ng-template #singlePrice>
+                  <span class="me-2">{{ product.attributes.price }}</span>
+                </ng-template>
                 <span class="me-2">x</span>
                 <div>
                   <input
@@ -391,9 +412,29 @@
                 </div>
               </div>
               <div class="col-md-3 col-lg-2 col-xl-2 offset-lg-1">
-                <h6 class="mb-0" #subTotalWrap>
-                  ₹{{ product.quantity * product.attributes.price }}
-                </h6>
+                <ng-container *ngIf="hasSpecialPrice(product); else hasSpecial">
+                  <ng-container *ngIf="hasFixedPrice(product)">
+                    <h6 class="mb-0">
+                      ₹{{ product.quantity * product.attributes.specialPrice }}
+                    </h6>
+                  </ng-container>
+                  <ng-container *ngIf="!hasFixedPrice(product)">
+                    <h6 class="mb-0">
+                      ₹{{
+                        product.quantity *
+                          calculateDiscountedPrice(
+                            product.attributes.price,
+                            product.attributes.specialPrice
+                          )
+                      }}
+                    </h6>
+                  </ng-container>
+                </ng-container>
+                <ng-template #hasSpecial>
+                  <h6 class="mb-0">
+                    ₹{{ product.quantity * product.attributes.price }}
+                  </h6>
+                </ng-template>
               </div>
             </div>
 

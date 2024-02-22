@@ -1,9 +1,9 @@
 export interface ProductRoot {
-    data: Daum[]
+    data: ProductData[]
     meta: Meta
 }
 
-export interface Daum {
+export interface ProductData {
     id: number
     attributes: ProductAttributes
 }
@@ -11,8 +11,8 @@ export interface Daum {
 export interface ProductAttributes {
     name: string
     slug: string
-    price: string
-    specialPrice: string
+    price: number
+    specialPrice: number
     description: string
     stockQuantity: string
     createdAt: string

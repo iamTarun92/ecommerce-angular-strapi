@@ -1,53 +1,54 @@
 export interface CategoriesRoot {
-    data: Daum[]
+    data: CategoriesData[]
     meta: Meta
-}
-
-export interface Daum {
+  }
+  
+  export interface CategoriesData {
     id: number
-    attributes: CategoriesAttributes
-}
-
-export interface CategoriesAttributes {
+    attributes: Attributes
+  }
+  
+  export interface Attributes {
     name: string
     createdAt: string
     updatedAt: string
     publishedAt: string
     products: Products
     image: Image
-}
-
-export interface Products {
+  }
+  
+  export interface Products {
     data: Daum2[]
-}
-
-export interface Daum2 {
+  }
+  
+  export interface Daum2 {
     id: number
     attributes: Attributes2
-}
-
-export interface Attributes2 {
+  }
+  
+  export interface Attributes2 {
     name: string
     slug: string
     price: string
-    specialPrice: string
+    specialPrice?: string
     description: string
     stockQuantity: string
     createdAt: string
     updatedAt: string
     publishedAt: string
-}
-
-export interface Image {
+    isFixedPrice: boolean
+  }
+  
+  export interface Image {
     data: Data
-}
-
-export interface Data {
+  }
+  
+  export interface Data {
     id: number
     attributes: Attributes3
-}
-
-export interface Attributes3 {
+  }
+  
+  export interface Attributes3 {
     name: string
     alternativeText: any
     caption: any
@@ -64,15 +65,16 @@ export interface Attributes3 {
     provider_metadata: any
     createdAt: string
     updatedAt: string
-}
-
-export interface Meta {
+  }
+  
+  export interface Meta {
     pagination: Pagination
-}
-
-export interface Pagination {
+  }
+  
+  export interface Pagination {
     page: number
     pageSize: number
     pageCount: number
     total: number
-}
+  }
+  

@@ -92,4 +92,16 @@ export class CheckoutComponent implements OnInit {
     })
   }
 
+  hasFixedPrice(product: any): boolean {
+    return product.attributes.isFixedPrice
+
+  }
+  hasSpecialPrice(product: any): boolean {
+    return !!product.attributes.specialPrice
+  }
+
+  calculateDiscountedPrice(originalPrice: number, discountPercentage: number): number {
+    return originalPrice - (originalPrice * discountPercentage / 100);
+  }
+
 }

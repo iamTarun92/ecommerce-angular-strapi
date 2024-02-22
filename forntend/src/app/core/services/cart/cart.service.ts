@@ -52,10 +52,19 @@ export class CartService {
     }
 
     // Get total price sum
-    getTotalPrice(arr: any): number {
-        return arr.reduce((total: any, product: any) => total + (parseInt(product.attributes.price) * product.quantity), 0);
+    getTotalPrice(cartItems: any): number {
+        return cartItems.reduce((total: any, product: any) => total + (parseInt(!!product.attributes.specialPrice && product.attributes.isFixedPrice ? product.attributes.specialPrice : !!product.attributes.specialPrice && !product.attributes.isFixedPrice ? this.calculateDiscountedPrice(product.attributes.price, product.attributes.specialPrice) : product.attributes.price) * product.quantity), 0);
     }
     getTotalQuantity(arr: any): number {
         return arr.reduce((total: any, product: any) => total + parseInt(product.quantity), 0);
+    }
+    hasFixedPrice(product: any): boolean {
+        return product.attributes.isFixedPrice
+    }
+    hasSpecialPrice(product: any): boolean {
+        return !!product.attributes.specialPrice
+    }
+    calculateDiscountedPrice(originalPrice: number, discountPercentage: number): number {
+        return originalPrice - (originalPrice * discountPercentage / 100);
     }
 }

@@ -12,31 +12,45 @@
               class="bg-image hover-zoom ripple ripple-surface ripple-surface-light p-4"
               data-mdb-ripple-color="light"
             >
-              <a [routerLink]="product.id" class="text-reset">
+              <a [routerLink]="product.id.toString()" class="text-reset">
                 <img
                   [src]="
-                    baseUrl + product?.attributes.image.data.attributes.url
+                    baseUrl + product?.attributes?.image?.data?.attributes?.url
                   "
                 />
               </a>
             </div>
             <div class="card-body">
-              <a [routerLink]="product.id" class="text-reset">
+              <a [routerLink]="product.id.toString()" class="text-reset">
                 <h5 class="card-title mb-3 text-uppercase">
                   {{ product.attributes.name }}
                 </h5>
               </a>
               <div class="mb-3">
-                <h2>₹{{ product.attributes.price }}</h2>
-                <del>{{ product.attributes.specialPrice }}</del>
-                <span>
-                  {{
-                    calculateDiscountPercentage(
-                      product.attributes.price,
-                      product.attributes.specialPrice
-                    )
-                  }}%off</span
-                >
+                <ng-container *ngIf="hasSpecialPrice(product); else hasSpecial">
+                  <ng-container *ngIf="hasFixedPrice(product)">
+                    <h2>₹{{ product.attributes.specialPrice }}</h2>
+                    <del>₹{{ product.attributes.price }}</del>
+                  </ng-container>
+
+                  <ng-container *ngIf="!hasFixedPrice(product)">
+                    <h2>
+                      ₹{{
+                        calculateDiscountedPrice(
+                          product.attributes.price,
+                          product.attributes.specialPrice
+                        )
+                      }}
+                    </h2>
+                    <del>₹{{ product.attributes.price }}</del>
+                    <span class="text-success">
+                      {{ product.attributes.specialPrice }}% off</span
+                    >
+                  </ng-container>
+                </ng-container>
+                <ng-template #hasSpecial>
+                  <h2>₹{{ product.attributes.price }}</h2>
+                </ng-template>
               </div>
               <button
                 class="round-black-btn"

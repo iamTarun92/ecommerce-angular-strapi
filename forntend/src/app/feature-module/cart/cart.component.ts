@@ -41,4 +41,13 @@ export class CartComponent implements OnInit {
     this.cartService.saveCart();
     this.ItemTotalPrice = this.cartService.getTotalPrice(this.cartItems)
   }
+  hasFixedPrice(product: any): boolean {
+    return product.attributes.isFixedPrice
+  }
+  hasSpecialPrice(product: any): boolean {
+    return !!product.attributes.specialPrice
+  }
+  calculateDiscountedPrice(originalPrice: number, discountPercentage: number): number {
+    return originalPrice - (originalPrice * discountPercentage / 100);
+  }
 }

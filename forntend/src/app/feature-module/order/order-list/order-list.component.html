@@ -51,9 +51,18 @@
                     <div
                       class="align-items-center col-md-5 d-flex justify-content-end"
                     >
-                      <p class="text-muted mb-0 small">
-                        {{ product.attributes.price * product.quantity }}
-                      </p>
+                      <ng-container
+                        *ngIf="hasSpecialPrice(product); else hasSpecial"
+                      >
+                        <p class="text-muted mb-0 small">
+                          {{ product.attributes.specialPrice * product.quantity }}
+                        </p>
+                      </ng-container>
+                      <ng-template #hasSpecial>
+                        <p class="text-muted mb-0 small">
+                          {{ product.attributes.price * product.quantity }}
+                        </p>
+                      </ng-template>
                     </div>
                   </div>
                 </div>

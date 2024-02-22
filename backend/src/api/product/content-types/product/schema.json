@@ -20,9 +20,6 @@
       "type": "uid",
       "required": true
     },
-    "price": {
-      "type": "string"
-    },
     "image": {
       "type": "media",
       "multiple": false,
@@ -30,9 +27,6 @@
       "allowedTypes": [
         "images"
       ]
-    },
-    "specialPrice": {
-      "type": "string"
     },
     "description": {
       "type": "text"
@@ -45,6 +39,16 @@
       "relation": "manyToMany",
       "target": "api::category.category",
       "inversedBy": "products"
+    },
+    "isFixedPrice": {
+      "type": "boolean"
+    },
+    "price": {
+      "type": "integer",
+      "required": true
+    },
+    "specialPrice": {
+      "type": "integer"
     }
   }
 }
