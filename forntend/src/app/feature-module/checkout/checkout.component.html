@@ -177,7 +177,7 @@
                     name="isDelivery"
                     class="form-check-input"
                     id="exampleCheck1"
-                    [value]="isDelivery"
+                    [checked]="isDelivery"
                     (change)="copyBillingAddressToDelivery($event)"
                   />
                   <label class="form-check-label" for="exampleCheck1"
@@ -438,7 +438,7 @@
             <h5 class="text-uppercase">Sub Total</h5>
             <h5>₹ {{ subTotal }}</h5>
           </div>
-          <div class="d-flex justify-content-between mb-2" *ngIf="isCodeValid">
+          <div class="d-flex justify-content-between mb-2" *ngIf="isCouponValid">
             <h5 class="text-uppercase">Coupon Discount</h5>
             <h5>₹ {{ (subTotal * couponDiscount) / 100 }}</h5>
           </div>

@@ -19,7 +19,7 @@ export class CartComponent implements OnInit {
   checkAuth = ''
   couponCode: any;
   couponDiscount = 0;
-  isCodeValid = false
+  isCouponValid: boolean | null = null;
 
 
   constructor(private cartService: CartService, private apiService: ApiService, private authService: AuthService, private router: Router) {
@@ -70,18 +70,18 @@ export class CartComponent implements OnInit {
   }
 
   applyCoupon(code: string) {
-    this.apiService.fetchCouponByCode(code.toUpperCase()).subscribe({
+    const couponCode = code.toUpperCase()
+    this.apiService.fetchCouponByCode(couponCode).subscribe({
       next: (response) => {
-        this.isCodeValid = !!response.data.length
-        if (this.isCodeValid) {
-          this.couponDiscount = response.data[0]?.attributes.discount
+        this.isCouponValid = !!response.data.length
+        if (this.isCouponValid) {
           localStorage.setItem('coupon', this.couponCode)
+          this.couponDiscount = response.data[0]?.attributes.discount
           this.ItemTotalPrice = this.calculateDiscountedPrice(this.ItemTotalPrice, this.couponDiscount)
         } else {
-          this.couponCode = ''
+          // this.couponCode = null
           localStorage.removeItem('coupon')
           this.ItemTotalPrice = this.cartService.getTotalPrice(this.cartItems)
-          alert('Coupon Code is not valid.')
         }
       }
     })

@@ -92,21 +92,33 @@
                       <h5 class="text-uppercase">Total price</h5>
                       <h5>₹ {{ totalPrice }}</h5>
                     </div>
-                    <div class="d-flex justify-content-between mb-5">
-                      <input
-                        type="text"
-                        class="form-check"
-                        [(ngModel)]="couponCode"
-                        placeholder="Enter coupon code"
-                      />
-                      <button
-                        (click)="applyCoupon(couponCode)"
-                        class="btn btn-primary"
-                        [disabled]="!couponCode"
-                      >
-                        Apply Coupon
-                      </button>
+                    <div class="mb-5">
+                      <div class="d-flex justify-content-between">
+                        <input
+                          type="text"
+                          class="form-check"
+                          [(ngModel)]="couponCode"
+                          placeholder="Enter coupon code"
+                        />
+
+                        <button
+                          (click)="applyCoupon(couponCode)"
+                          class="btn btn-primary"
+                          [disabled]="!couponCode"
+                        >
+                          Apply Coupon
+                        </button>
+                      </div>
+                      <ng-container *ngIf="isCouponValid !== null">
+                        <p *ngIf="isCouponValid" class="text-success">
+                          Coupon code is valid!
+                        </p>
+                        <p *ngIf="!isCouponValid" class="text-danger">
+                          Coupon code is not valid.
+                        </p>
+                      </ng-container>
                     </div>
+
                     <div class="d-flex justify-content-between mb-5">
                       <a
                         class="btn btn-primary text-uppercase ms-auto"

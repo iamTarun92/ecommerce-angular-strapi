@@ -26,7 +26,7 @@ export class CheckoutComponent implements OnInit {
   subTotal = 0
   couponCode: any;
   couponDiscount = 0;
-  isCodeValid = false
+  isCouponValid = false
 
   constructor(private fb: FormBuilder, private authService: AuthService, private cartService: CartService, private router: Router, private apiService: ApiService) { }
 
@@ -68,14 +68,16 @@ export class CheckoutComponent implements OnInit {
 
   copyBillingAddressToDelivery(event: any) {
     if (event.target.checked) {
+      this.isDelivery=true
       this.deliveryAddressForm.patchValue(this.billingAddressForm.value);
     } else {
+      this.isDelivery=false
       this.deliveryAddressForm.reset();
     }
   }
 
   get isCheckedAddressForm() {
-    return this.billingAddressForm.valid && this.deliveryAddressForm.valid && this.selectedPaymentMethod
+    return this.billingAddressForm.valid && this.selectedPaymentMethod
   }
 
   isOrderConfirm() {
@@ -124,8 +126,8 @@ export class CheckoutComponent implements OnInit {
   applyCoupon(code: string) {
     this.apiService.fetchCouponByCode(code.toUpperCase()).subscribe({
       next: (response) => {
-        this.isCodeValid = !!response.data.length
-        if (this.isCodeValid) {
+        this.isCouponValid = !!response.data.length
+        if (this.isCouponValid) {
           this.couponDiscount = response.data[0]?.attributes.discount
           localStorage.setItem('coupon', this.couponCode)
           this.ItemTotalPrice = this.calculateDiscountedPrice(this.ItemTotalPrice, this.couponDiscount)
