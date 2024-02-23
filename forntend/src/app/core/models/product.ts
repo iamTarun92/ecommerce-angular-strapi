@@ -20,6 +20,7 @@ export interface ProductAttributes {
     publishedAt: string
     image: Image
     categories: Categories
+    isFixedPrice:boolean
 }
 
 export interface Image {

@@ -4,7 +4,8 @@
   "info": {
     "singularName": "coupon-code",
     "pluralName": "coupon-codes",
-    "displayName": "Coupon-Code"
+    "displayName": "Coupon-Code",
+    "description": ""
   },
   "options": {
     "draftAndPublish": true
@@ -16,6 +17,14 @@
     },
     "discount": {
       "type": "integer"
+    },
+    "startDate": {
+      "type": "date",
+      "required": true
+    },
+    "endDate": {
+      "type": "date",
+      "required": true
     }
   }
 }

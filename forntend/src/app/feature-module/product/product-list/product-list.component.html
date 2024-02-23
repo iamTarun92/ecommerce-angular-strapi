@@ -1,11 +1,11 @@
 <section style="background-color: #eee">
   <div class="text-center container py-5">
-    <ng-container *ngIf="allProducts?.length; else prdShow">
+    <ng-container *ngIf="products?.length; else prdShow">
       <h4 class="mt-4 mb-5"><strong>All Products</strong></h4>
       <div class="row">
         <div
           class="col-lg-4 col-md-12 mb-4"
-          *ngFor="let product of allProducts"
+          *ngFor="let product of products"
         >
           <div class="card">
             <div
@@ -55,7 +55,7 @@
               <button
                 class="round-black-btn"
                 (click)="removeFromCart(product.id)"
-                *ngIf="checkIfExists(product.id); else elseBlock"
+                *ngIf="checkProductExists(product.id); else elseBlock"
               >
                 Remove to Cart
               </button>

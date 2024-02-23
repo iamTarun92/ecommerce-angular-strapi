@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { ApiService, CartService } from 'src/app/core/core.index';
+import { ProductData } from 'src/app/core/models/product';
 import { AuthService } from 'src/app/core/services/auth/auth.service';
 
 @Component({
@@ -56,16 +57,16 @@ export class CartComponent implements OnInit {
     this.ItemTotalPrice = this.calculateDiscountedPrice(this.ItemTotalPrice, this.couponDiscount)
   }
 
-  hasFixedPrice(product: any): boolean {
-    return product.attributes.isFixedPrice
+  hasFixedPrice(product: ProductData): boolean {
+    return this.cartService.hasFixedPrice(product)
   }
 
-  hasSpecialPrice(product: any): boolean {
-    return !!product.attributes.specialPrice
+  hasSpecialPrice(product: ProductData): boolean {
+    return this.cartService.hasSpecialPrice(product)
   }
 
   calculateDiscountedPrice(originalPrice: number, discountPercentage: number): number {
-    return originalPrice - (originalPrice * discountPercentage / 100);
+    return this.cartService.calculateDiscountedPrice(originalPrice, discountPercentage)
   }
 
   applyCoupon(code: string) {

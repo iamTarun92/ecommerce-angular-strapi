@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ApiService } from 'src/app/core/core.index';
+import { ApiService, CartService } from 'src/app/core/core.index';
+import { ProductData } from 'src/app/core/models/product';
 import { AuthService } from 'src/app/core/services/auth/auth.service';
 
 @Component({
@@ -11,7 +12,7 @@ import { AuthService } from 'src/app/core/services/auth/auth.service';
 export class OrderListComponent implements OnInit {
   currentUser: any
   allOrder: any
-  constructor(private activeRoute: ActivatedRoute, private apiService: ApiService, private authService: AuthService) { }
+  constructor(private activeRoute: ActivatedRoute, private apiService: ApiService, private authService: AuthService, private cartService: CartService) { }
 
   ngOnInit(): void {
     this.currentUser = JSON.parse(this.authService.getUser() || '')
@@ -34,13 +35,15 @@ export class OrderListComponent implements OnInit {
     }, 0);
   }
 
-  hasFixedPrice(product: any): boolean {
-    return product.attributes.isFixedPrice
+  hasFixedPrice(product: ProductData): boolean {
+    return this.cartService.hasFixedPrice(product)
   }
-  hasSpecialPrice(product: any): boolean {
-    return !!product.attributes.specialPrice
+
+  hasSpecialPrice(product: ProductData): boolean {
+    return this.cartService.hasSpecialPrice(product)
   }
+
   calculateDiscountedPrice(originalPrice: number, discountPercentage: number): number {
-    return originalPrice - (originalPrice * discountPercentage / 100);
+    return this.cartService.calculateDiscountedPrice(originalPrice, discountPercentage)
   }
 }

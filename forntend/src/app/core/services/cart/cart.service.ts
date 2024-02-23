@@ -1,4 +1,5 @@
 import { EventEmitter, Injectable } from '@angular/core';
+import { ProductData } from '../../models/product';
 
 
 
@@ -58,13 +59,20 @@ export class CartService {
     getTotalQuantity(arr: any): number {
         return arr.reduce((total: any, product: any) => total + parseInt(product.quantity), 0);
     }
-    hasFixedPrice(product: any): boolean {
+    hasFixedPrice(product: ProductData): boolean {
         return product.attributes.isFixedPrice
     }
-    hasSpecialPrice(product: any): boolean {
+    hasSpecialPrice(product: ProductData): boolean {
         return !!product.attributes.specialPrice
     }
     calculateDiscountedPrice(originalPrice: number, discountPercentage: number): number {
         return originalPrice - (originalPrice * discountPercentage / 100);
+    }
+    checkProductExists(id: number): boolean {
+        let localCarts = localStorage.getItem('cartItems')
+        if (localCarts) {
+            return JSON.parse(localCarts).some((element: any) => element.id === id)
+        }
+        return false
     }
 }

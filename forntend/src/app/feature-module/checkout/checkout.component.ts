@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ApiService, CartService } from 'src/app/core/core.index';
+import { ProductData } from 'src/app/core/models/product';
 import { AuthService } from 'src/app/core/services/auth/auth.service';
 
 @Component({
@@ -108,16 +109,16 @@ export class CheckoutComponent implements OnInit {
     })
   }
 
-  hasFixedPrice(product: any): boolean {
-    return product.attributes.isFixedPrice
-
+  hasFixedPrice(product: ProductData): boolean {
+    return this.cartService.hasFixedPrice(product)
   }
-  hasSpecialPrice(product: any): boolean {
-    return !!product.attributes.specialPrice
+
+  hasSpecialPrice(product: ProductData): boolean {
+    return this.cartService.hasSpecialPrice(product)
   }
 
   calculateDiscountedPrice(originalPrice: number, discountPercentage: number): number {
-    return originalPrice - (originalPrice * discountPercentage / 100);
+    return this.cartService.calculateDiscountedPrice(originalPrice, discountPercentage)
   }
 
   applyCoupon(code: string) {

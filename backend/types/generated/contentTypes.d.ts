@@ -824,6 +824,7 @@ export interface ApiCouponCodeCouponCode extends Schema.CollectionType {
     singularName: 'coupon-code';
     pluralName: 'coupon-codes';
     displayName: 'Coupon-Code';
+    description: '';
   };
   options: {
     draftAndPublish: true;
@@ -831,6 +832,8 @@ export interface ApiCouponCodeCouponCode extends Schema.CollectionType {
   attributes: {
     code: Attribute.String;
     discount: Attribute.Integer;
+    startDate: Attribute.Date & Attribute.Required;
+    endDate: Attribute.Date & Attribute.Required;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;

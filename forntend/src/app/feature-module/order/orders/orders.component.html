@@ -1,6 +1,6 @@
 <section>
   <div class="container py-5">
-    <div class="row d-flex">
+    <div class="row">
       <div class="col-12">
         <table class="table">
           <thead class="table-dark">
@@ -30,10 +30,13 @@
                 <a
                   class="btn btn-dark"
                   routerLink="order_details"
-                  [queryParams]="{ 'order_id': order.attributes.orderId }"
+                  [queryParams]="{ order_id: order.attributes.orderId }"
                   >Details</a
                 >
               </td>
+            </tr>
+            <tr *ngIf="!allOrder.length">
+              <td class="text-danger border-0 fs-5" colspan="7">No data Found</td>
             </tr>
           </tbody>
         </table>
