@@ -54,13 +54,30 @@
                       <ng-container
                         *ngIf="hasSpecialPrice(product); else hasSpecial"
                       >
-                        <p class="text-muted mb-0 small">
-                          {{ product.attributes.specialPrice * product.quantity }}
-                        </p>
+                        <ng-container *ngIf="hasFixedPrice(product)">
+                          <p class="text-muted mb-0 small">
+                            ₹{{
+                              product.quantity * product.attributes.specialPrice
+                            }}
+                          </p>
+                        </ng-container>
+                        <ng-container *ngIf="!hasFixedPrice(product)">
+                          <p class="text-muted mb-0 small">
+                            ₹{{
+                              product.quantity *
+                                calculateDiscountedPrice(
+                                  product.attributes.price,
+                                  product.attributes.specialPrice
+                                )
+                            }}
+                          </p>
+                        </ng-container>
                       </ng-container>
                       <ng-template #hasSpecial>
                         <p class="text-muted mb-0 small">
-                          {{ product.attributes.price * product.quantity }}
+                          ₹{{
+                            product.quantity * product.attributes.price
+                          }}
                         </p>
                       </ng-template>
                     </div>
