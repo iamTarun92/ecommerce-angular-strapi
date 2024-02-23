@@ -17,7 +17,7 @@ export class OrderListComponent implements OnInit {
     this.currentUser = JSON.parse(this.authService.getUser() || '')
 
     this.activeRoute.queryParams.subscribe(data => {
-      this.apiService.fetchByOrderId(data?.['order_id']).subscribe({
+      this.apiService.fetchOrderById(data?.['order_id']).subscribe({
         next: (res) => {
           this.allOrder = res?.data
         }

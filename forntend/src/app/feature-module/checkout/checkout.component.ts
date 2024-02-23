@@ -21,11 +21,23 @@ export class CheckoutComponent implements OnInit {
   ];
   selectedPaymentMethod = null;
   isDelivery = false
+  ItemTotalPrice = 0
+  subTotal = 0
+  couponCode: any;
+  couponDiscount = 0;
+  isCodeValid = false
 
   constructor(private fb: FormBuilder, private authService: AuthService, private cartService: CartService, private router: Router, private apiService: ApiService) { }
 
   ngOnInit(): void {
     this.cartItems = this.cartService.getCartItems()
+    this.subTotal = this.cartService.getTotalPrice(this.cartItems)
+    this.ItemTotalPrice = this.cartService.getTotalPrice(this.cartItems)
+    if (localStorage.getItem('coupon')) {
+      this.couponCode = localStorage.getItem('coupon')
+      this.applyCoupon(this.couponCode)
+    }
+
     this.currentUser = JSON.parse(this.authService.getUser() || '')
     this.billingAddressForm = this.fb.group({
       fullName: ['', Validators.required],
@@ -43,6 +55,10 @@ export class CheckoutComponent implements OnInit {
       state: ['', Validators.required],
       zipCode: ['', [Validators.required, Validators.pattern('[0-9]{5}')]]
     });
+  }
+
+  get totalPrice() {
+    return this.ItemTotalPrice
   }
 
   onSelectPaymentMethod(method: any) {
@@ -102,6 +118,24 @@ export class CheckoutComponent implements OnInit {
 
   calculateDiscountedPrice(originalPrice: number, discountPercentage: number): number {
     return originalPrice - (originalPrice * discountPercentage / 100);
+  }
+
+  applyCoupon(code: string) {
+    this.apiService.fetchCouponByCode(code.toUpperCase()).subscribe({
+      next: (response) => {
+        this.isCodeValid = !!response.data.length
+        if (this.isCodeValid) {
+          this.couponDiscount = response.data[0]?.attributes.discount
+          localStorage.setItem('coupon', this.couponCode)
+          this.ItemTotalPrice = this.calculateDiscountedPrice(this.ItemTotalPrice, this.couponDiscount)
+        } else {
+          this.couponCode = ''
+          localStorage.removeItem('coupon')
+          this.ItemTotalPrice = this.cartService.getTotalPrice(this.cartItems)
+          alert('Coupon Code is not valid.')
+        }
+      }
+    })
   }
 
 }

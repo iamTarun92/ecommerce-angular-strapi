@@ -3,6 +3,8 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, map, tap } from 'rxjs';
 import { ProductRoot } from '../../models/product';
 import { CategoriesRoot } from '../../models/categories';
+import { OrderRoot } from '../../models/order';
+import { CouponRoot } from '../../models/coupon-codes';
 
 
 @Injectable({
@@ -22,21 +24,13 @@ export class ApiService {
     getSessionToken() {
         return localStorage.getItem('session_token');
     }
-    fetchProducts(): Observable<ProductRoot> {
-        const token = this.getSessionToken();
-        const headers = new HttpHeaders({
-            'Authorization': `Bearer ${token}`
-        });
-        const url = '/products?populate=*'
-        return this.http.get<ProductRoot>(this.baseUrl + url).pipe(map(data => data as ProductRoot))
-    }
-    fetchProductById(id: string): Observable<any> {
+    fetchProductById(id: string): Observable<ProductRoot> {
         const token = this.getSessionToken();
         const headers = new HttpHeaders({
             'Authorization': `Bearer ${token}`
         });
         const url = `/products/${id}?populate=*`
-        return this.http.get(this.baseUrl + url)
+        return this.http.get<ProductRoot>(this.baseUrl + url).pipe(map(data => data as ProductRoot))
     }
     fetchProductByCategory(categoryId: string): Observable<ProductRoot> {
         const token = this.getSessionToken();
@@ -58,16 +52,16 @@ export class ApiService {
         const url = '/orders'
         return this.http.post<any>(`${this.baseUrl}/orders`, orderData)
     }
-    getOrderByUserId(email: string): Observable<any> {
+    fetchOrderByUserId(email: string): Observable<OrderRoot> {
         const url = `/orders?filters[email][$eq]=${email}`
-        return this.http.get<any>(this.baseUrl + url)
+        return this.http.get<OrderRoot>(this.baseUrl + url).pipe(map(data => data as OrderRoot))
     }
-    fetchByOrderId(orderId: string): Observable<any> {
+    fetchOrderById(orderId: string): Observable<OrderRoot> {
         const url = `/orders?filters[orderId][$eq]=${orderId}`
-        return this.http.get<any>(this.baseUrl + url)
+        return this.http.get<OrderRoot>(this.baseUrl + url).pipe(map(data => data as OrderRoot))
     }
-    getAllOrders(): Observable<any> {
-        const url = `/orders`
-        return this.http.get<any>(this.baseUrl + url)
+    fetchCouponByCode(code: string): Observable<CouponRoot> {
+        const url = `/coupon-codes?filters[code][$eq]=${code}`
+        return this.http.get<CouponRoot>(this.baseUrl + url).pipe(map(data => data as CouponRoot))
     }
 }

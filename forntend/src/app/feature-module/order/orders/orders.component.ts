@@ -16,7 +16,7 @@ export class OrdersComponent implements OnInit {
   ngOnInit(): void {
     this.currentUser = JSON.parse(this.authService.getUser() || '')
 
-    this.apiService.getOrderByUserId(this.currentUser.email).subscribe({
+    this.apiService.fetchOrderByUserId(this.currentUser.email).subscribe({
       next: (res) => {
         this.allOrder = res?.data
         console.log(this.allOrder);
