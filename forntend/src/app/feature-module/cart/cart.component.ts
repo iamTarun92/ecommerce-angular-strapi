@@ -76,13 +76,12 @@ export class CartComponent implements OnInit {
   }
 
   applyCoupon(code: string) {
-    const couponCode = code
-    this.couponService.fetchCouponByCode(couponCode).subscribe({
+    this.couponService.fetchCouponByCode(code).subscribe({
       next: (response) => {
         if (response) {
           const startDate = response.attributes.startDate
           const endDate = response.attributes.endDate
-          const isfixed = response.attributes.isfixed
+          const isFixedPrice = response.attributes.isfixed
           const minOrder = response.attributes.minOrder
           this.isCouponValid = this.couponService.isCouponValid(startDate, endDate)
           this.couponData = response
@@ -94,10 +93,10 @@ export class CartComponent implements OnInit {
               localStorage.removeItem('coupon')
               this.ItemTotalPrice = this.cartService.getSubTotal(this.cartItems)
             }
-            if (!isfixed) {
-              this.ItemTotalPrice = this.calculateDiscountedPrice(this.ItemTotalPrice, this.couponDiscount)
-            } else if (isfixed) {
+            if (isFixedPrice) {
               this.ItemTotalPrice = this.ItemTotalPrice - this.couponDiscount
+            } else {
+              this.ItemTotalPrice = this.calculateDiscountedPrice(this.ItemTotalPrice, this.couponDiscount)
             }
           } else {
             this.isMinOrder = true

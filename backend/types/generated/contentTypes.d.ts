@@ -880,6 +880,7 @@ export interface ApiOrderOrder extends Schema.CollectionType {
       Attribute.DefaultTo<'pending'>;
     orderStatus: Attribute.Enumeration<['processing', 'delivered']> &
       Attribute.DefaultTo<'processing'>;
+    couponId: Attribute.String;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;

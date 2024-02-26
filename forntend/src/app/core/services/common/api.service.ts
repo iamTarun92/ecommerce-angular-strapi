@@ -31,7 +31,7 @@ export class ApiService {
         const url = `/products/${id}?populate=*`
         return this.http.get<ProductRoot>(this.baseUrl + url).pipe(map(data => data as ProductRoot))
     }
-    fetchProductByCategory(categoryId: string): Observable<ProductRoot> {
+    fetchProductByCategoryId(categoryId: string): Observable<ProductRoot> {
         const token = this.getSessionToken();
         const headers = new HttpHeaders({
             'Authorization': `Bearer ${token}`
@@ -51,7 +51,7 @@ export class ApiService {
         const url = '/orders'
         return this.http.post<any>(`${this.baseUrl}/orders`, orderData)
     }
-    fetchOrderByUserId(email: string): Observable<OrderRoot> {
+    fetchOrderByEmail(email: string): Observable<OrderRoot> {
         const url = `/orders?filters[email][$eq]=${email}`
         return this.http.get<OrderRoot>(this.baseUrl + url).pipe(map(data => data as OrderRoot))
     }

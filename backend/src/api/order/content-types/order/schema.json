@@ -65,6 +65,9 @@
         "delivered"
       ],
       "default": "processing"
+    },
+    "couponId": {
+      "type": "string"
     }
   }
 }

@@ -19,7 +19,7 @@ export class ProductListComponent implements OnInit {
   ngOnInit(): void {
     this.activeRoute.params.subscribe(data => {
       const categoryId = this.activeRoute.snapshot.params['categoryId']
-      this.apiService.fetchProductByCategory(categoryId).subscribe({
+      this.apiService.fetchProductByCategoryId(categoryId).subscribe({
         next: (res: any) => {
           this.products = res?.data
         },
