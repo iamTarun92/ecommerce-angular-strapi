@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { ApiService, CartService } from 'src/app/core/core.index';
+import { ApiService, CartService, CouponService } from 'src/app/core/core.index';
 import { ProductData } from 'src/app/core/models/product';
 import { AuthService } from 'src/app/core/services/auth/auth.service';
 
@@ -28,12 +28,12 @@ export class CheckoutComponent implements OnInit {
   couponDiscount = 0;
   isCouponValid = false
 
-  constructor(private fb: FormBuilder, private authService: AuthService, private cartService: CartService, private router: Router, private apiService: ApiService) { }
+  constructor(private fb: FormBuilder, private authService: AuthService, private cartService: CartService, private router: Router, private apiService: ApiService, private couponService: CouponService) { }
 
   ngOnInit(): void {
     this.cartItems = this.cartService.getCartItems()
-    this.subTotal = this.cartService.getTotalPrice(this.cartItems)
-    this.ItemTotalPrice = this.cartService.getTotalPrice(this.cartItems)
+    this.subTotal = this.cartService.getSubTotal(this.cartItems)
+    this.ItemTotalPrice = this.cartService.getSubTotal(this.cartItems)
     if (localStorage.getItem('coupon')) {
       this.couponCode = localStorage.getItem('coupon')
       this.applyCoupon(this.couponCode)
@@ -68,10 +68,10 @@ export class CheckoutComponent implements OnInit {
 
   copyBillingAddressToDelivery(event: any) {
     if (event.target.checked) {
-      this.isDelivery=true
+      this.isDelivery = true
       this.deliveryAddressForm.patchValue(this.billingAddressForm.value);
     } else {
-      this.isDelivery=false
+      this.isDelivery = false
       this.deliveryAddressForm.reset();
     }
   }
@@ -96,7 +96,7 @@ export class CheckoutComponent implements OnInit {
         "address": address,
         "name": this.billingAddressForm.value.fullName,
         "transactionId": transactionId.toString(),
-        "amount": this.cartService.getTotalPrice(this.cartItems).toString(),
+        "amount": this.cartService.getSubTotal(this.cartItems).toString(),
       }
     }
     this.apiService.addOrder(data).subscribe({
@@ -124,18 +124,29 @@ export class CheckoutComponent implements OnInit {
   }
 
   applyCoupon(code: string) {
-    this.apiService.fetchCouponByCode(code.toUpperCase()).subscribe({
+    const couponCode = code.toUpperCase()
+    this.couponService.fetchCouponByCode(couponCode).subscribe({
       next: (response) => {
-        this.isCouponValid = !!response.data.length
-        if (this.isCouponValid) {
-          this.couponDiscount = response.data[0]?.attributes.discount
-          localStorage.setItem('coupon', this.couponCode)
-          this.ItemTotalPrice = this.calculateDiscountedPrice(this.ItemTotalPrice, this.couponDiscount)
-        } else {
+        if (response) {
+          const startDate = response.attributes.startDate
+          const endDate = response.attributes.endDate
+          const isValid = this.couponService.isCouponValid(startDate, endDate)
+          if (isValid) {
+            this.isCouponValid = true
+            localStorage.setItem('coupon', this.couponCode)
+            this.couponDiscount = response.attributes.discount
+            this.ItemTotalPrice = this.calculateDiscountedPrice(this.ItemTotalPrice, this.couponDiscount)
+          } else {
+            this.isCouponValid = false
+            localStorage.removeItem('coupon')
+            this.ItemTotalPrice = this.cartService.getSubTotal(this.cartItems)
+          }
+        }
+        else {
           this.couponCode = ''
+          this.isCouponValid = false
           localStorage.removeItem('coupon')
-          this.ItemTotalPrice = this.cartService.getTotalPrice(this.cartItems)
-          alert('Coupon Code is not valid.')
+          this.ItemTotalPrice = this.cartService.getSubTotal(this.cartItems)
         }
       }
     })

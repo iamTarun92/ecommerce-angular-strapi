@@ -53,7 +53,7 @@ export class CartService {
     }
 
     // Get total price sum
-    getTotalPrice(cartItems: any): number {
+    getSubTotal(cartItems: any): number {
         return cartItems.reduce((total: any, product: any) => total + (parseInt(!!product.attributes.specialPrice && product.attributes.isFixedPrice ? product.attributes.specialPrice : !!product.attributes.specialPrice && !product.attributes.isFixedPrice ? this.calculateDiscountedPrice(product.attributes.price, product.attributes.specialPrice) : product.attributes.price) * product.quantity), 0);
     }
     getTotalQuantity(arr: any): number {

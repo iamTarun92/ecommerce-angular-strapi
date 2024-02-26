@@ -85,12 +85,25 @@
                     <hr class="my-4" />
                     <div class="d-flex justify-content-between mb-4">
                       <h5>Price ({{ cartItems.length }} items)</h5>
-                      <h5>₹{{ ItemTotalPrice }}</h5>
+                      <h5>₹{{ subTotal }}</h5>
                     </div>
                     <hr class="my-4" />
                     <div class="d-flex justify-content-between mb-5">
-                      <h5 class="text-uppercase">Total price</h5>
-                      <h5>₹ {{ totalPrice }}</h5>
+                      <h5>Sub Total</h5>
+                      <h5>₹ {{ subTotal }}</h5>
+                    </div>
+                    <div
+                      class="d-flex justify-content-between mb-5"
+                      *ngIf="isCouponValid"
+                    >
+                      <h5>Coupon Discount</h5>
+                      <h5>₹ {{ (subTotal * couponDiscount) / 100 }}</h5>
+                    </div>
+                    <hr class="my-4" />
+
+                    <div class="d-flex justify-content-between mb-5">
+                      <h5>Order Total</h5>
+                      <h5>₹ {{ ItemTotalPrice }}</h5>
                     </div>
                     <div class="mb-5">
                       <div class="d-flex justify-content-between">
@@ -109,19 +122,36 @@
                           Apply Coupon
                         </button>
                       </div>
-                      <ng-container *ngIf="isCouponValid !== null">
-                        <p *ngIf="isCouponValid" class="text-success">
-                          Coupon code is valid!
+                      <ng-container *ngIf="isMinOrder !== null">
+                        <p *ngIf="isMinOrder" class="text-danger">
+                          Min order amount is
+                          {{ couponData.attributes.minOrder }}.
                         </p>
-                        <p *ngIf="!isCouponValid" class="text-danger">
-                          Coupon code is not valid.
+                      </ng-container>
+                      <ng-container
+                        *ngIf="isCouponValid !== null && !isMinOrder"
+                      >
+                        <p *ngIf="isCouponValid" class="text-success">
+                          Coupon code applied successfully.
+                        </p>
+                        <p
+                          *ngIf="!isCouponValid && couponData"
+                          class="text-danger"
+                        >
+                          Coupon code has expired.
+                        </p>
+                        <p
+                          *ngIf="!isCouponValid && !couponData"
+                          class="text-danger"
+                        >
+                        Coupon code is not valid.
                         </p>
                       </ng-container>
                     </div>
 
                     <div class="d-flex justify-content-between mb-5">
                       <a
-                        class="btn btn-primary text-uppercase ms-auto"
+                        class="btn btn-primary text-uppercase w-100"
                         [routerLink]="checkAuth"
                       >
                         Place Order

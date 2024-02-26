@@ -4,7 +4,6 @@ import { Observable, map, tap } from 'rxjs';
 import { ProductRoot } from '../../models/product';
 import { CategoriesRoot } from '../../models/categories';
 import { OrderRoot } from '../../models/order';
-import { CouponRoot } from '../../models/coupon-codes';
 
 
 @Injectable({
@@ -59,9 +58,5 @@ export class ApiService {
     fetchOrderById(orderId: string): Observable<OrderRoot> {
         const url = `/orders?filters[orderId][$eq]=${orderId}`
         return this.http.get<OrderRoot>(this.baseUrl + url).pipe(map(data => data as OrderRoot))
-    }
-    fetchCouponByCode(code: string): Observable<CouponRoot> {
-        const url = `/coupon-codes?filters[code][$eq]=${code}`
-        return this.http.get<CouponRoot>(this.baseUrl + url).pipe(map(data => data as CouponRoot))
     }
 }

@@ -834,6 +834,8 @@ export interface ApiCouponCodeCouponCode extends Schema.CollectionType {
     discount: Attribute.Integer;
     startDate: Attribute.Date & Attribute.Required;
     endDate: Attribute.Date & Attribute.Required;
+    minOrder: Attribute.Integer;
+    isfixed: Attribute.Boolean;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;

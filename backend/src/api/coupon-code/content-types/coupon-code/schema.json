@@ -25,6 +25,13 @@
     "endDate": {
       "type": "date",
       "required": true
+    },
+    "minOrder": {
+      "type": "integer",
+      "required": false
+    },
+    "isfixed": {
+      "type": "boolean"
     }
   }
 }
