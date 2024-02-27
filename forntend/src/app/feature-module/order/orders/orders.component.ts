@@ -18,9 +18,7 @@ export class OrdersComponent implements OnInit {
 
     this.apiService.fetchOrderByEmail(this.currentUser.email).subscribe({
       next: (res) => {
-        this.allOrder = res?.data
-        console.log(this.allOrder);
-
+        this.allOrder = res.data
       }
     })
   }

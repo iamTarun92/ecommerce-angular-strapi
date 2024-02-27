@@ -24,9 +24,7 @@ export class LoginComponent implements OnInit {
   loginFormSubmit() {
     this.authService.login(this.loginForm.value).subscribe({
       next: (response) => {
-        const { user } = response
-        console.log(user);
-        
+        const { user } = response       
         this.loginForm.reset()
         this.router.navigate(['category'])
       },

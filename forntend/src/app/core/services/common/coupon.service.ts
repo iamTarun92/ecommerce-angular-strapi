@@ -17,6 +17,10 @@ export class CouponService {
         const url = `/coupon-codes?filters[code][$eq]=${code}`
         return this.http.get<CouponRoot>(this.baseUrl + url).pipe(map(data => data.data[0] as CouponData))
     }
+    fetchCouponById(id: string): Observable<CouponData> {
+        const url = `/coupon-codes/${id}`
+        return this.http.get<CouponRoot>(this.baseUrl + url).pipe(map(data => data.data[0] as CouponData))
+    }
 
     isCouponValid(sDate: string, eDate: string): boolean {
         const currentDate = new Date();

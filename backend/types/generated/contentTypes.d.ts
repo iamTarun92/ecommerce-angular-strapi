@@ -872,7 +872,6 @@ export interface ApiOrderOrder extends Schema.CollectionType {
     products: Attribute.JSON & Attribute.Required;
     name: Attribute.String & Attribute.Required;
     transactionId: Attribute.String;
-    amount: Attribute.String & Attribute.Required;
     address: Attribute.JSON;
     shipingAmt: Attribute.Integer & Attribute.DefaultTo<100>;
     orderDate: Attribute.Date & Attribute.DefaultTo<'2024-02-16'>;
@@ -881,6 +880,7 @@ export interface ApiOrderOrder extends Schema.CollectionType {
     orderStatus: Attribute.Enumeration<['processing', 'delivered']> &
       Attribute.DefaultTo<'processing'>;
     couponId: Attribute.String;
+    amount: Attribute.Integer & Attribute.Required;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;

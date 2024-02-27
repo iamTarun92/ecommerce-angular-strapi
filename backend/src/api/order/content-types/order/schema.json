@@ -34,10 +34,6 @@
     "transactionId": {
       "type": "string"
     },
-    "amount": {
-      "type": "string",
-      "required": true
-    },
     "address": {
       "type": "json"
     },
@@ -68,6 +64,10 @@
     },
     "couponId": {
       "type": "string"
+    },
+    "amount": {
+      "type": "integer",
+      "required": true
     }
   }
 }

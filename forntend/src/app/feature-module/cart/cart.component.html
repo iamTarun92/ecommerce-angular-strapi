@@ -7,13 +7,13 @@
             <div class="card-body p-0">
               <div class="row">
                 <div class="col-lg-8">
-                  <div *ngFor="let product of cartItems; let i = index">
+                  <div *ngFor="let cartItem of cartItems; let i = index">
                     <div class="mb-4 d-flex align-items-center">
                       <div class="col-md-2 col-lg-2 col-xl-2">
                         <img
                           [src]="
                             baseUrl +
-                            product.attributes.image.data.attributes.url
+                            cartItem.attributes.image.data.attributes.url
                           "
                           style="height: 100px"
                           alt="Cotton T-shirt"
@@ -21,40 +21,39 @@
                       </div>
                       <div class="col-md-3 col-lg-3 col-xl-3">
                         <h6 class="text-muted text-uppercase">
-                          {{ product.attributes.name }}
+                          {{ cartItem.attributes.name }}
                         </h6>
-                        <!-- <h6 class="text-black mb-0">Cotton T-shirt</h6> -->
                       </div>
                       <div class="col-md-3 col-lg-3 col-xl-2 d-flex">
                         <input
                           min="1"
                           name="quantity"
-                          [value]="product.quantity"
-                          [(ngModel)]="product.quantity"
+                          [value]="cartItem.quantity"
+                          [(ngModel)]="cartItem.quantity"
                           type="number"
                           class="form-control form-control-sm"
-                          (change)="changeSubtotal(product, i)"
+                          (change)="changeSubtotal()"
                         />
                       </div>
                       <div class="col-md-3 col-lg-2 col-xl-2 offset-lg-1">
                         <ng-container
-                          *ngIf="hasSpecialPrice(product); else hasSpecial"
+                          *ngIf="hasSpecialPrice(cartItem); else hasSpecial"
                         >
-                          <ng-container *ngIf="hasFixedPrice(product)">
+                          <ng-container *ngIf="hasFixedPrice(cartItem)">
                             <h6 class="mb-0">
                               ₹{{
-                                product.quantity *
-                                  product.attributes.specialPrice
+                                cartItem.quantity *
+                                  cartItem.attributes.specialPrice
                               }}
                             </h6>
                           </ng-container>
-                          <ng-container *ngIf="!hasFixedPrice(product)">
+                          <ng-container *ngIf="!hasFixedPrice(cartItem)">
                             <h6 class="mb-0">
                               ₹{{
-                                product.quantity *
+                                cartItem.quantity *
                                   calculateDiscountedPrice(
-                                    product.attributes.price,
-                                    product.attributes.specialPrice
+                                    cartItem.attributes.price,
+                                    cartItem.attributes.specialPrice
                                   )
                               }}
                             </h6>
@@ -62,14 +61,14 @@
                         </ng-container>
                         <ng-template #hasSpecial>
                           <h6 class="mb-0">
-                            ₹{{ product.quantity * product.attributes.price }}
+                            ₹{{ cartItem.quantity * cartItem.attributes.price }}
                           </h6>
                         </ng-template>
                       </div>
                       <div class="col-md-1 col-lg-1 col-xl-1 text-end">
                         <button
                           class="btn btn-danger"
-                          (click)="removeFromCart(product.id)"
+                          (click)="removeFromCart(cartItem.id)"
                         >
                           Remove
                         </button>
@@ -93,15 +92,20 @@
                       <h5>₹ {{ subTotal }}</h5>
                     </div>
                     <div
-                      class="d-flex justify-content-between mb-5"
+                      class="d-flex justify-content-between text-success mb-5" 
                       *ngIf="isCouponValid"
                     >
                       <h5>Coupon Discount</h5>
-                      <h5>₹ {{ (subTotal * couponDiscount) / 100 }}</h5>
+                      <h5 *ngIf="couponData.attributes.isfixed">
+                        ₹ {{ couponDiscount }}
+                      </h5>
+                      <h5 *ngIf="!couponData.attributes.isfixed">
+                        ₹ {{ (subTotal * couponDiscount) / 100 }}
+                      </h5>
                     </div>
                     <hr class="my-4" />
 
-                    <div class="d-flex justify-content-between mb-5">
+                    <div class="d-flex justify-content-between text-danger mb-5">
                       <h5>Order Total</h5>
                       <h5>₹ {{ ItemTotalPrice }}</h5>
                     </div>
@@ -144,7 +148,7 @@
                           *ngIf="!isCouponValid && !couponData"
                           class="text-danger"
                         >
-                        Coupon code is not valid.
+                          Coupon code is not valid.
                         </p>
                       </ng-container>
                     </div>

@@ -1,4 +1,4 @@
-<section class="h-100 gradient-custom">
+<section class="h-100 gradient-custom" *ngIf="allOrder">
   <div class="container py-5 h-100">
     <div class="row d-flex justify-content-center align-items-center h-100">
       <div class="col-lg-10 col-xl-8">
@@ -15,6 +15,9 @@
               <p class="lead fw-normal mb-0" style="color: #a8729a">Receipt</p>
               <p class="small text-muted mb-0">
                 Order Id : {{ allOrder[0].attributes.orderId }}
+              </p>
+              <p class="small text-muted mb-0">
+                Transaction Id : {{ allOrder[0].attributes.transactionId }}
               </p>
             </div>
             <ng-container *ngFor="let order of allOrder">
@@ -75,9 +78,7 @@
                       </ng-container>
                       <ng-template #hasSpecial>
                         <p class="text-muted mb-0 small">
-                          ₹{{
-                            product.quantity * product.attributes.price
-                          }}
+                          ₹{{ product.quantity * product.attributes.price }}
                         </p>
                       </ng-template>
                     </div>
@@ -86,18 +87,20 @@
               </div>
             </ng-container>
 
-            <div class="d-flex justify-content-between pt-2">
-              <p class="fw-bold mb-0">Order Details</p>
-              <p class="text-muted mb-0">
-                <span class="fw-bold me-4">Total Paid:</span>
-                {{ getTotalPrice() }}
-              </p>
+            <div class="d-flex justify-content-between mb-2">
+              <h5>Sub Total</h5>
+              <h5>₹ {{ subTotal }}</h5>
             </div>
-
-            <div class="d-flex justify-content-between pt-2">
-              <p class="text-muted mb-0">
-                Transaction Id : {{ allOrder[0].attributes.transactionId }}
-              </p>
+            <div
+              class="d-flex justify-content-between text-success mb-2"
+              *ngIf="allOrder[0].attributes.couponId"
+            >
+              <h5>Coupon Discount</h5>
+              <h5>₹ {{ subTotal - allOrder[0].attributes.amount }}</h5>
+            </div>
+            <div class="d-flex justify-content-between mb-2 text-danger">
+              <h5>Order Total</h5>
+              <h5>₹ {{ allOrder[0].attributes.amount }}</h5>
             </div>
           </div>
         </div>

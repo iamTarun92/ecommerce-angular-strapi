@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ApiService, CartService } from 'src/app/core/core.index';
+import { ApiService, CartService, CouponService } from 'src/app/core/core.index';
+import { CouponData } from 'src/app/core/models/coupon-codes';
 import { ProductData } from 'src/app/core/models/product';
 import { AuthService } from 'src/app/core/services/auth/auth.service';
 
@@ -12,27 +13,26 @@ import { AuthService } from 'src/app/core/services/auth/auth.service';
 export class OrderListComponent implements OnInit {
   currentUser: any
   allOrder: any
-  constructor(private activeRoute: ActivatedRoute, private apiService: ApiService, private authService: AuthService, private cartService: CartService) { }
+  couponData: CouponData | null = null
+  subTotal = 0
+
+
+  constructor(private activeRoute: ActivatedRoute, private apiService: ApiService, private authService: AuthService, private cartService: CartService, private couponService: CouponService) { }
 
   ngOnInit(): void {
+
     this.currentUser = JSON.parse(this.authService.getUser() || '')
 
     this.activeRoute.queryParams.subscribe(data => {
       this.apiService.fetchOrderById(data?.['order_id']).subscribe({
         next: (res) => {
           this.allOrder = res?.data
+          this.subTotal = this.cartService.getSubTotal(this.allOrder[0].attributes.products)
         }
       })
     })
 
 
-  }
-  getTotalPrice(): number {
-    return this.allOrder.reduce((sum: any, product: any) => {
-      return sum + product.attributes.products.reduce((subSum: any, subProduct: any) => {
-        return subSum + (parseInt(!!subProduct.attributes.specialPrice ? subProduct.attributes.specialPrice : subProduct.attributes.price) * subProduct.quantity);
-      }, 0);
-    }, 0);
   }
 
   hasFixedPrice(product: ProductData): boolean {

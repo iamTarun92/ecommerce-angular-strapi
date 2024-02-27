@@ -24,6 +24,7 @@ export interface OrderAttributes {
     orderDate: string
     paymentStatus: string
     orderStatus: string
+    couponId: string
 }
 
 export interface Product {
