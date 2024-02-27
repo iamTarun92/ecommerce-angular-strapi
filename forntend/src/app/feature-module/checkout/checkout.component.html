@@ -441,10 +441,10 @@
             *ngIf="isCouponValid"
           >
             <h5>Coupon Discount</h5>
-            <h5 *ngIf="couponData.attributes.isfixed">
+            <h5 *ngIf="couponData?.attributes?.isfixed">
               ₹ {{ couponDiscount }}
             </h5>
-            <h5 *ngIf="!couponData.attributes.isfixed">
+            <h5 *ngIf="!couponData?.attributes?.isfixed">
               ₹ {{ (subTotal * couponDiscount) / 100 }}
             </h5>
           </div>

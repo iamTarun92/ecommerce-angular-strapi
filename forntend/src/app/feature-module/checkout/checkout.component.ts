@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ApiService, CartService, CouponService } from 'src/app/core/core.index';
+import { CouponData } from 'src/app/core/models/coupon-codes';
 import { ProductData } from 'src/app/core/models/product';
 import { AuthService } from 'src/app/core/services/auth/auth.service';
 
@@ -29,7 +30,9 @@ export class CheckoutComponent implements OnInit {
   couponDiscount = 0;
   isCouponValid: boolean | null = null;
   isMinOrder: boolean | null = null;
-  couponData: any
+  couponData: CouponData | null = null
+  duplicateCouponCode: boolean | null = null;
+
 
 
   constructor(private fb: FormBuilder, private authService: AuthService, private cartService: CartService, private router: Router, private apiService: ApiService, private couponService: CouponService) { }
@@ -43,7 +46,7 @@ export class CheckoutComponent implements OnInit {
     this.ItemTotalPrice = this.subTotal
     if (localStorage.getItem('couponCode')) {
       this.couponCode = localStorage.getItem('couponCode')
-      this.applyCoupon(this.couponCode)
+      this.applyCoupon(this.couponCode, false)
     }
 
     this.currentUser = JSON.parse(this.authService.getUser() || '')
@@ -100,16 +103,15 @@ export class CheckoutComponent implements OnInit {
         "name": this.billingAddressForm.value.fullName,
         "transactionId": transactionId.toString(),
         "amount": this.ItemTotalPrice,
-        "couponId": this.couponId.toString()
+        "couponId": this.couponId?.toString()
       }
     }
     this.apiService.addOrder(data).subscribe({
       next: (response) => {
-        alert('Your order is placed.')
+        this.router.navigate(['orders'])
         localStorage.removeItem('cartItems')
         localStorage.removeItem('couponCode')
         this.cartService.loadCart()
-        this.router.navigate(['orders'])
       },
       error: (error) => alert('Error: ' + error.error.error.message)
 
@@ -128,32 +130,50 @@ export class CheckoutComponent implements OnInit {
     return this.cartService.calculateDiscountedPrice(originalPrice, discountPercentage)
   }
 
-  applyCoupon(code: string) {
+  applyCoupon(code: string, check: boolean): void {
+    if (check) {
+      if (this.couponCode !== localStorage.getItem('couponCode')) {
+        this.callCouponCode(code)
+      } else {
+        this.duplicateCouponCode = true
+      }
+    } else {
+      this.callCouponCode(code)
+    }
+  }
+
+  callCouponCode(code: string): void {
     this.couponService.fetchCouponByCode(code).subscribe({
       next: (response) => {
         if (response) {
-          this.couponData = response
           const startDate = response.attributes.startDate
           const endDate = response.attributes.endDate
           const isFixedPrice = response.attributes.isfixed
           const minOrder = response.attributes.minOrder
           this.isCouponValid = this.couponService.isCouponValid(startDate, endDate)
-          this.couponId = response.id
-          if (this.isCouponValid) {
-            this.couponDiscount = response.attributes.discount
-            localStorage.setItem('couponCode', this.couponCode)
-            if (isFixedPrice) {
-              this.ItemTotalPrice = this.ItemTotalPrice - this.couponDiscount
+          this.couponData = response
+          console.log(this.couponData);
+
+          if (minOrder <= this.subTotal) {
+            if (this.isCouponValid) {
+              this.couponDiscount = response.attributes.discount
+              localStorage.setItem('couponCode', this.couponCode)
+              if (isFixedPrice) {
+                this.ItemTotalPrice = this.ItemTotalPrice - this.couponDiscount
+              } else {
+                this.ItemTotalPrice = this.calculateDiscountedPrice(this.ItemTotalPrice, this.couponDiscount)
+              }
             } else {
-              this.ItemTotalPrice = this.calculateDiscountedPrice(this.ItemTotalPrice, this.couponDiscount)
+              localStorage.removeItem('couponCode')
+              this.ItemTotalPrice = this.cartService.getSubTotal(this.cartItems)
             }
           } else {
-            localStorage.removeItem('couponCode')
-            this.ItemTotalPrice = this.cartService.getSubTotal(this.cartItems)
+            this.isMinOrder = true
           }
         }
         else {
-          // this.couponCode = ''
+          this.couponData = null
+
           this.isCouponValid = false
           localStorage.removeItem('couponCode')
           this.ItemTotalPrice = this.cartService.getSubTotal(this.cartItems)

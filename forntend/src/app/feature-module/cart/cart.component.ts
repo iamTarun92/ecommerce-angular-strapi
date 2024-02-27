@@ -19,11 +19,12 @@ export class CartComponent implements OnInit {
   isLoggedIn$!: Observable<boolean>;
   cartItems: any[] = [];
   checkAuth = ''
-  couponData!: CouponData
+  couponData: CouponData | null = null
   couponCode: any;
   couponDiscount = 0;
   isCouponValid: boolean | null = null;
   isMinOrder: boolean | null = null;
+  duplicateCouponCode: boolean | null = null;
 
 
   constructor(private cartService: CartService, private apiService: ApiService, private couponService: CouponService, private authService: AuthService, private router: Router) {
@@ -43,7 +44,7 @@ export class CartComponent implements OnInit {
 
     if (localStorage.getItem('couponCode')) {
       this.couponCode = localStorage.getItem('couponCode')
-      this.applyCoupon(this.couponCode)
+      this.applyCoupon(this.couponCode, false)
     }
   }
 
@@ -77,7 +78,19 @@ export class CartComponent implements OnInit {
     return this.cartService.calculateDiscountedPrice(originalPrice, discountPercentage)
   }
 
-  applyCoupon(code: string) {
+  applyCoupon(code: string, check: boolean): void {
+    if (check) {
+      if (this.couponCode !== localStorage.getItem('couponCode')) {
+        this.callCouponCode(code)
+      } else {
+        this.duplicateCouponCode = true
+      }
+    } else {
+      this.callCouponCode(code)
+    }
+  }
+
+  callCouponCode(code: string): void {
     this.couponService.fetchCouponByCode(code).subscribe({
       next: (response) => {
         if (response) {
@@ -87,21 +100,28 @@ export class CartComponent implements OnInit {
           const minOrder = response.attributes.minOrder
           this.isCouponValid = this.couponService.isCouponValid(startDate, endDate)
           this.couponData = response
-          if (this.isCouponValid) {
-            this.couponDiscount = response.attributes.discount
-            localStorage.setItem('couponCode', this.couponCode)
-            if (isFixedPrice) {
-              this.ItemTotalPrice = this.ItemTotalPrice - this.couponDiscount
+          console.log(this.couponData);
+
+          if (minOrder <= this.subTotal) {
+            if (this.isCouponValid) {
+              this.couponDiscount = response.attributes.discount
+              localStorage.setItem('couponCode', this.couponCode)
+              if (isFixedPrice) {
+                this.ItemTotalPrice = this.ItemTotalPrice - this.couponDiscount
+              } else {
+                this.ItemTotalPrice = this.calculateDiscountedPrice(this.ItemTotalPrice, this.couponDiscount)
+              }
             } else {
-              this.ItemTotalPrice = this.calculateDiscountedPrice(this.ItemTotalPrice, this.couponDiscount)
+              localStorage.removeItem('couponCode')
+              this.ItemTotalPrice = this.cartService.getSubTotal(this.cartItems)
             }
           } else {
-            localStorage.removeItem('couponCode')
-            this.ItemTotalPrice = this.cartService.getSubTotal(this.cartItems)
+            this.isMinOrder = true
           }
         }
         else {
-          // this.couponCode = ''
+          this.couponData = null
+
           this.isCouponValid = false
           localStorage.removeItem('couponCode')
           this.ItemTotalPrice = this.cartService.getSubTotal(this.cartItems)
