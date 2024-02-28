@@ -1,0 +1,104 @@
+<ng-container *ngIf="allProducts.length; else productError">
+  <section class="container my-5">
+    <div
+      class="row justify-content-center mb-3"
+      *ngFor="let product of allProducts"
+    >
+      <div class="col-md-12 col-xl-10">
+        <div class="card shadow-0 border rounded-3">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-12 col-lg-3 col-xl-3 mb-4 mb-lg-0">
+                <img
+                  [src]="
+                    'http://localhost:1337' +
+                    product?.attributes?.image?.data?.attributes?.url
+                  "
+                />
+              </div>
+              <div class="col-md-6 col-lg-6 col-xl-6">
+                <h5 class="text-uppercase">{{ product.attributes.name }}</h5>
+
+                <p class="text-muted mb-4 mb-md-0">
+                  {{ product.attributes.description }}
+                </p>
+              </div>
+              <div
+                class="col-md-6 col-lg-3 col-xl-3 border-sm-start-none border-start"
+              >
+                <ng-container *ngIf="hasSpecialPrice(product); else hasSpecial">
+                  <ng-container *ngIf="hasFixedPrice(product)">
+                    <div class="d-flex flex-row align-items-center mb-1">
+                      <h2>₹{{ product.attributes.specialPrice }}</h2>
+                      <del>₹{{ product.attributes.price }}</del>
+                    </div>
+                  </ng-container>
+
+                  <ng-container *ngIf="!hasFixedPrice(product)">
+                    <h2>
+                      ₹{{
+                        calculateDiscountedPrice(
+                          product.attributes.price,
+                          product.attributes.specialPrice
+                        )
+                      }}
+                    </h2>
+                    <del>₹{{ product.attributes.price }}</del>
+                    <span class="text-success">
+                      {{ product.attributes.specialPrice }}% off</span
+                    >
+                  </ng-container>
+                </ng-container>
+                <ng-template #hasSpecial>
+                  <h2>₹{{ product.attributes.price }}</h2>
+                </ng-template>
+                <h6 class="text-success">Free shipping</h6>
+
+                <div class="d-flex flex-column mt-4">
+                  <a
+                    [routerLink]="
+                      '/product/' +
+                      product.attributes.categories.data[0].id +
+                      '/' +
+                      product.id
+                    "
+                    class="btn btn-primary btn-sm"
+                  >
+                    Details
+                  </a>
+                  <button
+                    class="btn btn-outline-primary btn-sm mt-2"
+                    type="button"
+                    (click)="handleRemoveWishList(product.id)"
+                  >
+                    Remove
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</ng-container>
+<ng-template #productError>
+  <div class="container my-5">
+    <div class="row">
+      <div class="col-12">
+        <div class="card p-5 text-center">
+          <img
+            class="card-img-top w-25 mx-auto"
+            src="https://rukminim2.flixcart.com/www/800/800/promos/16/05/2019/d438a32e-765a-4d8b-b4a6-520b560971e8.png?q=90"
+            alt="Card image cap"
+          />
+          <div class="card-body">
+            <h5 class="card-title">Your wishlist is empty!</h5>
+            <p class="card-text">Add items to it now.</p>
+            <a class="btn btn-primary" routerLink="/category">Shop Now</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>

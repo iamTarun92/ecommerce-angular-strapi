@@ -21,7 +21,7 @@ export class OrderListComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.currentUser = JSON.parse(this.authService.getUser() || '')
+    this.currentUser = JSON.parse(this.authService.getUser() || '{}')
 
     this.activeRoute.queryParams.subscribe(data => {
       this.apiService.fetchOrderById(data?.['order_id']).subscribe({

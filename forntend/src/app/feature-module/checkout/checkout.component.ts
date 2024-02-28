@@ -49,7 +49,7 @@ export class CheckoutComponent implements OnInit {
       this.applyCoupon(this.couponCode, false)
     }
 
-    this.currentUser = JSON.parse(this.authService.getUser() || '')
+    this.currentUser = JSON.parse(this.authService.getUser() || '{}')
     this.billingAddressForm = this.fb.group({
       fullName: ['', Validators.required],
       phone: ['', [Validators.required, Validators.pattern('[0-9]{10}')]],

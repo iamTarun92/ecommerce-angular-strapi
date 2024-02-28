@@ -13,7 +13,11 @@ export class HeaderComponent implements OnInit {
   cartData: any;
   isLoggedIn$!: Observable<boolean>;
 
-  constructor(private cartService: CartService, private authService: AuthService,private router: Router) {
+  constructor(
+    private cartService: CartService,
+    private authService: AuthService,
+    private router: Router
+  ) {
     cartService.loadCart()
     this.cartData = cartService.getCartItems()
     cartService.cartData.subscribe({
@@ -27,7 +31,7 @@ export class HeaderComponent implements OnInit {
   ngOnInit() {
     this.isLoggedIn$ = this.authService.isLoggedIn();
   }
-  logOut(){
+  logOut() {
     this.authService.logout()
     this.router.navigate(['category'])
   }

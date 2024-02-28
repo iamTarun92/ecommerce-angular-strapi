@@ -1,5 +1,3 @@
-// auth.service.ts
-
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
@@ -24,8 +22,8 @@ export class AuthService {
       tap(response => {
         if (response.jwt) {
           localStorage.setItem('session_token', response.jwt);
-          localStorage.setItem('user', JSON.stringify(response.user));
           localStorage.setItem('authenticated', 'true');
+          localStorage.setItem('user', JSON.stringify(response.user));
           this.isAuthenticatedSubject.next(true);
         }
       })
@@ -33,8 +31,8 @@ export class AuthService {
   }
 
   logout(): void {
-    localStorage.removeItem('authenticated');
     localStorage.removeItem('session_token');
+    localStorage.removeItem('authenticated');
     localStorage.removeItem('user');
     this.isAuthenticatedSubject.next(false);
   }

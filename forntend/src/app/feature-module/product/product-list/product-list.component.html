@@ -3,11 +3,8 @@
     <ng-container *ngIf="products?.length; else prdShow">
       <h4 class="mt-4 mb-5"><strong>All Products</strong></h4>
       <div class="row">
-        <div
-          class="col-lg-4 col-md-12 mb-4"
-          *ngFor="let product of products"
-        >
-          <div class="card">
+        <div class="col-lg-4 col-md-12 mb-4" *ngFor="let product of products">
+          <div class="card h-100">
             <div
               class="bg-image hover-zoom ripple ripple-surface ripple-surface-light p-4"
               data-mdb-ripple-color="light"
@@ -52,18 +49,38 @@
                   <h2>₹{{ product.attributes.price }}</h2>
                 </ng-template>
               </div>
-              <button
-                class="round-black-btn"
-                (click)="removeFromCart(product.id)"
+              <ng-container
                 *ngIf="checkProductExists(product.id); else elseBlock"
               >
-                Remove to Cart
-              </button>
+                <button
+                  class="round-black-btn"
+                  (click)="removeFromCart(product.id)"
+                >
+                  Remove to Cart
+                </button>
+              </ng-container>
               <ng-template #elseBlock>
                 <button class="round-black-btn" (click)="addToCart(product)">
                   Add to Cart
                 </button>
               </ng-template>
+              <span class="fs-5 ms-2">
+                <i
+                  *ngIf="productIds.indexOf(product.id) >= 0"
+                  class="bi bi-heart-fill text-danger"
+                  (click)="handleRemoveWishList(product.id)"
+                ></i>
+                <i
+                  *ngIf="productIds.indexOf(product.id) === -1"
+                  class="bi bi-heart text-danger"
+                  (click)="
+                    handleAddToWishList(
+                      currentUser.email,
+                      product.id.toString()
+                    )
+                  "
+                ></i>
+              </span>
             </div>
           </div>
         </div>

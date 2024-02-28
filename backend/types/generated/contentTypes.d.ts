@@ -823,7 +823,7 @@ export interface ApiCouponCodeCouponCode extends Schema.CollectionType {
   info: {
     singularName: 'coupon-code';
     pluralName: 'coupon-codes';
-    displayName: 'Coupon-Code';
+    displayName: 'CouponCode';
     description: '';
   };
   options: {
@@ -847,6 +847,38 @@ export interface ApiCouponCodeCouponCode extends Schema.CollectionType {
       Attribute.Private;
     updatedBy: Attribute.Relation<
       'api::coupon-code.coupon-code',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiMyWishListMyWishList extends Schema.CollectionType {
+  collectionName: 'my_wish_lists';
+  info: {
+    singularName: 'my-wish-list';
+    pluralName: 'my-wish-lists';
+    displayName: 'MyWishList';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    email: Attribute.Email & Attribute.Required;
+    productId: Attribute.String & Attribute.Required;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::my-wish-list.my-wish-list',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::my-wish-list.my-wish-list',
       'oneToOne',
       'admin::user'
     > &
@@ -962,6 +994,7 @@ declare module '@strapi/types' {
       'plugin::i18n.locale': PluginI18NLocale;
       'api::category.category': ApiCategoryCategory;
       'api::coupon-code.coupon-code': ApiCouponCodeCouponCode;
+      'api::my-wish-list.my-wish-list': ApiMyWishListMyWishList;
       'api::order.order': ApiOrderOrder;
       'api::product.product': ApiProductProduct;
     }

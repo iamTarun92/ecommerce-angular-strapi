@@ -35,8 +35,14 @@ const routes: Routes = [
         canActivate: [AuthGuard],
         loadChildren: () => import('./order/order.module').then(m => m.OrderModule)
       },
+      {
+        path: 'wishlist',
+        canActivate: [AuthGuard],
+        loadChildren: () => import('./wishlist/wishlist.module').then(m => m.WishlistModule)
+      },
     ]
   },
+  { path: 'wishlist', loadChildren: () => import('./wishlist/wishlist.module').then(m => m.WishlistModule) },
 ];
 
 @NgModule({

@@ -1,0 +1,24 @@
+{
+  "kind": "collectionType",
+  "collectionName": "my_wish_lists",
+  "info": {
+    "singularName": "my-wish-list",
+    "pluralName": "my-wish-lists",
+    "displayName": "MyWishList",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "email": {
+      "type": "email",
+      "required": true
+    },
+    "productId": {
+      "type": "string",
+      "required": true
+    }
+  }
+}

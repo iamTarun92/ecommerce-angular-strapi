@@ -1,0 +1,31 @@
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs/internal/Observable';
+
+
+@Injectable({
+  providedIn: 'root'
+})
+export class WishlistService {
+
+  private baseUrl = 'http://localhost:1337/api'
+
+  constructor(private http: HttpClient) { }
+
+  getWishlistItems(): Observable<any> {
+    const url = this.baseUrl + `/my-wish-lists`
+    return this.http.get<any>(url)
+  }
+
+  addToWishlist(product: { email: string, productId: string }): Observable<any> {
+    const url = this.baseUrl + `/my-wish-lists`
+    return this.http.post<any>(url, { data: product })
+  }
+
+  removeFromWishlist(productId: string): Observable<any> {
+    const url = `${this.baseUrl}/my-wish-lists/${productId}`;
+    return this.http.delete<any>(url);
+  }
+
+
+}
