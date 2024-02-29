@@ -15,20 +15,19 @@ export class ProductListComponent implements OnInit {
   baseUrl = 'http://localhost:1337'
   currentUser: any
   wishListItems: any
-  productIds: any[] = []
 
 
   constructor(
     private apiService: ApiService,
     private cartService: CartService,
-    private wishService: WishlistService,
+    private wishListService: WishlistService,
     private authService: AuthService,
     private activeRoute: ActivatedRoute,
     private router: Router
   ) { }
 
   ngOnInit(): void {
-    this.currentUser = JSON.parse(this.authService.getUser() || '{}')
+    this.currentUser = JSON.parse(this.authService.getCurrentUser() || '{}')
 
     this.activeRoute.params.subscribe(data => {
       const categoryId = this.activeRoute.snapshot.params['categoryId']
@@ -46,17 +45,16 @@ export class ProductListComponent implements OnInit {
     })
   }
 
-  addToCart(product: any) {
-    product.quantity = 1
-    this.cartService.addItemToCart(product)
+  isItemExists(product: any): boolean {
+    return this.wishListItems?.findIndex((o: any) => parseInt(o.attributes.productId) === product.id) > -1;
   }
-
-  removeFromCart(productId: number) {
-    this.cartService.removeItemFromCart(productId)
-  }
-
-  checkProductExists(id: number): boolean {
-    return this.cartService.checkProductExists(id)
+  loadWishListItems() {
+    this.wishListService.getWishlistItems().subscribe({
+      next: (response) => {
+        this.wishListService.wishListCount.next(response.data.length)
+        this.wishListItems = response.data.filter((item: any) => item.attributes.email === this.currentUser.email)
+      }
+    })
   }
 
   hasFixedPrice(product: ProductData): boolean {
@@ -71,15 +69,6 @@ export class ProductListComponent implements OnInit {
     return this.cartService.calculateDiscountedPrice(originalPrice, discountPercentage)
   }
 
-
-  loadWishListItems() {
-    this.wishService.getWishlistItems().subscribe({
-      next: (response) => {
-        this.wishListItems = response.data.filter((item: any) => item.attributes.email === this.currentUser.email)
-        this.productIds = this.wishListItems.map((item: any) => parseInt(item.attributes.productId));
-      }
-    })
-  }
   handleAddToWishList(userEmail: string, productId: string) {
     if (this.authService.getToken()) {
       const data = {
@@ -87,7 +76,7 @@ export class ProductListComponent implements OnInit {
         "productId": productId
 
       }
-      this.wishService.addToWishlist(data).subscribe({
+      this.wishListService.addToWishlist(data).subscribe({
         next: (res) => {
           this.loadWishListItems()
           alert('Product added.')
@@ -102,16 +91,5 @@ export class ProductListComponent implements OnInit {
   }
   handleRemoveWishList(productId: number) {
     alert('This product is already added.')
-    // const arr = this.wishListItems.find((product: any) => parseInt(product.attributes.productId) === productId);
-
-    // this.wishService.removeFromWishlist(arr.id).subscribe({
-    //   next: (res) => {
-    //     this.loadWishListItems()
-    //     alert('Product deleted.')
-    //   },
-    //   error: (error) => {
-    //     alert('error')
-    //   }
-    // })
   }
 }

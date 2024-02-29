@@ -14,7 +14,7 @@ export class OrdersComponent implements OnInit {
   constructor(private apiService: ApiService, private authService: AuthService) { }
 
   ngOnInit(): void {
-    this.currentUser = JSON.parse(this.authService.getUser() || '{}')
+    this.currentUser = JSON.parse(this.authService.getCurrentUser() || '{}')
 
     this.apiService.fetchOrderByEmail(this.currentUser.email).subscribe({
       next: (res) => {

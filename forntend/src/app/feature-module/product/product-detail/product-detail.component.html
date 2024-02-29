@@ -1,8 +1,32 @@
 <div class="container mt-5" *ngIf="product">
   <div class="row">
-    <div class="bg-body-tertiary col-md-6 p-4 text-center">
+    <div class="bg-body-tertiary col-md-6 p-4 text-center position-relative">
+      <div class="end-0 position-absolute top-0">
+        <button class="btn" *ngIf="isItemExistsInWishlist(product)">
+          <i
+            class="bi bi-heart-fill text-danger fs-4"
+            (click)="handleRemoveWishList(product.id)"
+          ></i>
+        </button>
+        <button
+          class="btn"
+          *ngIf="!isItemExistsInWishlist(product)"
+        >
+          <i
+            class="bi bi-heart text-danger fs-4"
+            (click)="
+              handleAddToWishList(
+                currentUser.email,
+                product.id.toString()
+              )
+            "
+          ></i>
+        </button>
+      </div>
       <img
-        [src]="'http://localhost:1337' + product.image.data.attributes.url"
+        [src]="
+          'http://localhost:1337' + product.attributes.image.data.attributes.url
+        "
       />
     </div>
     <div class="col-md-6">
@@ -25,8 +49,24 @@
             <span>3 Reviews</span>
           </div>
           <div class="product-price-discount">
-            <span>₹{{ product.price }}</span
-            ><span class="line-through">₹{{ product.specialPrice }}</span>
+            <ng-container *ngIf="hasSpecialPrice(product); else hasSpecial">
+              <ng-container *ngIf="hasFixedPrice(product)">
+                <h4>{{ product.attributes.specialPrice }}.00 INR</h4>
+              </ng-container>
+              <ng-container *ngIf="!hasFixedPrice(product)">
+                <h4>
+                  {{
+                    calculateDiscountedPrice(
+                      product.attributes.price,
+                      product.attributes.specialPrice
+                    )
+                  }}.00 INR
+                </h4>
+              </ng-container>
+            </ng-container>
+            <ng-template #hasSpecial>
+              <h4>{{ product.attributes.price }}.00 INR</h4>
+            </ng-template>
           </div>
         </div>
         <p>
@@ -58,7 +98,18 @@
             <input type="text" name="quantity" [value]="quantity" class="qty" />
             <div class="qtyplus" (click)="increaseQuantity()">+</div>
           </form>
-          <button class="round-black-btn">Add to Cart</button>
+          <div class="mt-5">
+            <button class="btn btn-primary p-2" (click)="addToCart(product)">
+              Add to Cart
+            </button>
+            <button
+              routerLink="/cart"
+              class="btn btn-outline-primary ms-3 p-2"
+              *ngIf="isItemExists(product)"
+            >
+              Go to Cart
+            </button>
+          </div>
         </div>
       </div>
     </div>

@@ -17,13 +17,13 @@ export class WishlistComponent implements OnInit {
   currentUser: any
 
   constructor(
-    private wishService: WishlistService,
+    private wishListService: WishlistService,
     private authService: AuthService,
     private apiService: ApiService,
     private cartService: CartService,
     private router: Router
   ) {
-    this.currentUser = JSON.parse(this.authService.getUser() || '{}')
+    this.currentUser = JSON.parse(this.authService.getCurrentUser() || '{}')
   }
 
   ngOnInit(): void {
@@ -38,13 +38,13 @@ export class WishlistComponent implements OnInit {
     this.apiService.fetchProducts().subscribe({
       next: (response) => {
         this.products = response.data
-
       }
     })
   }
   loadWishListItems() {
-    this.wishService.getWishlistItems().subscribe({
+    this.wishListService.getWishlistItems().subscribe({
       next: (response) => {
+        this.wishListService.wishListCount.next(response.data.length)
         this.wishListItems = response.data.filter((item: any) => item.attributes.email === this.currentUser.email)
       }
     })
@@ -70,7 +70,7 @@ export class WishlistComponent implements OnInit {
   handleRemoveWishList(productId: number) {
     const arr = this.wishListItems.find((product: any) => parseInt(product.attributes.productId) === productId);
 
-    this.wishService.removeFromWishlist(arr.id).subscribe({
+    this.wishListService.removeFromWishlist(arr.id).subscribe({
       next: (res) => {
         this.loadWishListItems()
         alert('Product deleted.')

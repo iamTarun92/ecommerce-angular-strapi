@@ -17,70 +17,81 @@
                 />
               </a>
             </div>
-            <div class="card-body">
+            <div class="card-body d-flex flex-column">
               <a [routerLink]="product.id.toString()" class="text-reset">
-                <h5 class="card-title mb-3 text-uppercase">
+                <h6 class="card-title mb-3 text-uppercase">
                   {{ product.attributes.name }}
-                </h5>
+                </h6>
               </a>
               <div class="mb-3">
                 <ng-container *ngIf="hasSpecialPrice(product); else hasSpecial">
                   <ng-container *ngIf="hasFixedPrice(product)">
-                    <h2>₹{{ product.attributes.specialPrice }}</h2>
-                    <del>₹{{ product.attributes.price }}</del>
+                    <div
+                      class="d-flex justify-content-center align-items-center"
+                    >
+                      <del class="me-2 text-muted fs-4">{{
+                        product.attributes.price
+                      }}.00</del>
+                      <h4 class="mb-0">
+                        {{ product.attributes.specialPrice }}.00 INR
+                      </h4>
+                    </div>
                   </ng-container>
 
                   <ng-container *ngIf="!hasFixedPrice(product)">
-                    <h2>
-                      ₹{{
-                        calculateDiscountedPrice(
-                          product.attributes.price,
-                          product.attributes.specialPrice
-                        )
-                      }}
-                    </h2>
-                    <del>₹{{ product.attributes.price }}</del>
+                    <div
+                      class="d-flex justify-content-center align-items-center"
+                    >
+                      <del class="me-2 text-muted fs-4">{{
+                        product.attributes.price
+                      }}.00</del>
+
+                      <h4 class="mb-0">
+                        {{
+                          calculateDiscountedPrice(
+                            product.attributes.price,
+                            product.attributes.specialPrice
+                          )
+                        }}.00
+                        INR
+                      </h4>
+                    </div>
                     <span class="text-success">
-                      {{ product.attributes.specialPrice }}% off</span
+                      ({{ product.attributes.specialPrice }}% off)</span
                     >
                   </ng-container>
                 </ng-container>
                 <ng-template #hasSpecial>
-                  <h2>₹{{ product.attributes.price }}</h2>
+                  <div class="d-flex justify-content-center align-items-center">
+                    <h4 class="mb-0">{{ product.attributes.price }}.00 INR</h4>
+                  </div>
                 </ng-template>
               </div>
-              <ng-container
-                *ngIf="checkProductExists(product.id); else elseBlock"
-              >
+              <div class="icon-gorup mt-auto">
+                <a [routerLink]="product.id.toString()"
+                  ><i class="bi bi-bag-dash fs-4 text-black"></i
+                ></a>
+                <button class="btn" *ngIf="isItemExists(product)">
+                  <i
+                    class="bi bi-heart-fill text-danger fs-4"
+                    (click)="handleRemoveWishList(product.id)"
+                  ></i>
+                </button>
                 <button
-                  class="round-black-btn"
-                  (click)="removeFromCart(product.id)"
+                  class="btn"
+                  *ngIf="!isItemExists(product)"
                 >
-                  Remove to Cart
+                  <i
+                    class="bi bi-heart text-danger fs-4"
+                    (click)="
+                      handleAddToWishList(
+                        currentUser.email,
+                        product.id.toString()
+                      )
+                    "
+                  ></i>
                 </button>
-              </ng-container>
-              <ng-template #elseBlock>
-                <button class="round-black-btn" (click)="addToCart(product)">
-                  Add to Cart
-                </button>
-              </ng-template>
-              <span class="fs-5 ms-2">
-                <i
-                  *ngIf="productIds.indexOf(product.id) >= 0"
-                  class="bi bi-heart-fill text-danger"
-                  (click)="handleRemoveWishList(product.id)"
-                ></i>
-                <i
-                  *ngIf="productIds.indexOf(product.id) === -1"
-                  class="bi bi-heart text-danger"
-                  (click)="
-                    handleAddToWishList(
-                      currentUser.email,
-                      product.id.toString()
-                    )
-                  "
-                ></i>
-              </span>
+              </div>
             </div>
           </div>
         </div>

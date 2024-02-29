@@ -8,11 +8,11 @@ import { BehaviorSubject, Observable, tap } from 'rxjs';
 export class AuthService {
   private baseUrl = 'http://localhost:1337/api';
 
-  private isAuthenticatedSubject: BehaviorSubject<boolean>;
-  public currentuser: BehaviorSubject<string>;
+  private isLoggedInSubject: BehaviorSubject<boolean>;
+  private currentuser: BehaviorSubject<string>;
 
   constructor(private http: HttpClient) {
-    this.isAuthenticatedSubject = new BehaviorSubject<boolean>(localStorage.getItem('authenticated') ? true : false);
+    this.isLoggedInSubject = new BehaviorSubject<boolean>(localStorage.getItem('authenticated') ? true : false);
     this.currentuser = new BehaviorSubject<string>(localStorage.getItem('user') || '');
   }
 
@@ -24,7 +24,7 @@ export class AuthService {
           localStorage.setItem('session_token', response.jwt);
           localStorage.setItem('authenticated', 'true');
           localStorage.setItem('user', JSON.stringify(response.user));
-          this.isAuthenticatedSubject.next(true);
+          this.isLoggedInSubject.next(true);
         }
       })
     );
@@ -34,17 +34,26 @@ export class AuthService {
     localStorage.removeItem('session_token');
     localStorage.removeItem('authenticated');
     localStorage.removeItem('user');
-    this.isAuthenticatedSubject.next(false);
+    this.isLoggedInSubject.next(false);
   }
 
   isLoggedIn(): Observable<boolean> {
-    return this.isAuthenticatedSubject.asObservable()
+    return this.isLoggedInSubject.asObservable()
+    // return !!localStorage.getItem('session_token');
   }
 
   getToken(): string | null {
     return localStorage.getItem('session_token');
   }
-  getUser(): string | null {
+
+  getCurrentUser(): string | null {
     return localStorage.getItem('user');
   }
+
+  // getCurrentUser(): any {
+  //   // return user details from token
+  //   const token = localStorage.getItem('session_token');
+  //   // decode token to get user details
+  //   return token ? JSON.parse(atob(token.split('.')[1])) : null;
+  // }
 }

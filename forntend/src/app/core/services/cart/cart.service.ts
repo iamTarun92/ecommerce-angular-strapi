@@ -11,9 +11,7 @@ export class CartService {
     cartItems: any[] = []
     cartData = new EventEmitter<any>()
 
-    constructor() {
-        // this.clearCart(this.cartKey)
-    }
+    constructor() { }
 
     getCartItems() {
         return this.cartItems
@@ -26,21 +24,30 @@ export class CartService {
     }
 
     addItemToCart(product: any): void {
-        this.cartItems.push(product);
+        const existingItemIndex = this.cartItems.findIndex(cartItem => cartItem.id === product.id);
+        if (existingItemIndex !== -1) {
+            this.cartItems[existingItemIndex].quantity = product.quantity;
+        } else {
+            this.cartItems.push(product);
+        }
         this.saveCart()
     }
 
     removeItemFromCart(productId: number) {
-        const index = this.cartItems.findIndex(o => o.id === productId);
-        if (index > -1) {
-            this.cartItems.splice(index, 1);
+        const existingItemIndex = this.cartItems.findIndex(o => o.id === productId);
+        if (existingItemIndex > -1) {
+            this.cartItems.splice(existingItemIndex, 1);
             this.saveCart()
         }
+
     }
 
     saveCart(): void {
         localStorage.setItem(this.cartKey, JSON.stringify(this.cartItems));
         this.cartData.emit(this.cartItems)
+        if (!this.cartItems.length) {
+            this.clearCart(this.cartKey)
+        }
     }
 
     clearCart(key: string): void {
@@ -67,12 +74,5 @@ export class CartService {
     }
     calculateDiscountedPrice(originalPrice: number, discountPercentage: number): number {
         return originalPrice - (originalPrice * discountPercentage / 100);
-    }
-    checkProductExists(id: number): boolean {
-        let localCarts = localStorage.getItem('cartItems')
-        if (localCarts) {
-            return JSON.parse(localCarts).some((element: any) => element.id === id)
-        }
-        return false
     }
 }
