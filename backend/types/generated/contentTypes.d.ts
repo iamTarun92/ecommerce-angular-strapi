@@ -717,6 +717,11 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
       'plugin::users-permissions.role'
     >;
     phone: Attribute.String;
+    reviews: Attribute.Relation<
+      'plugin::users-permissions.user',
+      'oneToMany',
+      'api::review.review'
+    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
@@ -956,6 +961,11 @@ export interface ApiProductProduct extends Schema.CollectionType {
     isFixedPrice: Attribute.Boolean;
     price: Attribute.Integer & Attribute.Required;
     specialPrice: Attribute.Integer;
+    reviews: Attribute.Relation<
+      'api::product.product',
+      'oneToMany',
+      'api::review.review'
+    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -971,6 +981,77 @@ export interface ApiProductProduct extends Schema.CollectionType {
       'admin::user'
     > &
       Attribute.Private;
+  };
+}
+
+export interface ApiReviewReview extends Schema.CollectionType {
+  collectionName: 'reviews';
+  info: {
+    singularName: 'review';
+    pluralName: 'reviews';
+    displayName: 'review';
+    description: '';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  pluginOptions: {
+    i18n: {
+      localized: true;
+    };
+  };
+  attributes: {
+    content: Attribute.Text &
+      Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    author: Attribute.Relation<
+      'api::review.review',
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
+    product: Attribute.Relation<
+      'api::review.review',
+      'manyToOne',
+      'api::product.product'
+    >;
+    note: Attribute.Integer &
+      Attribute.Required &
+      Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }> &
+      Attribute.SetMinMax<
+        {
+          min: 1;
+          max: 5;
+        },
+        number
+      > &
+      Attribute.DefaultTo<1>;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::review.review',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::review.review',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    localizations: Attribute.Relation<
+      'api::review.review',
+      'oneToMany',
+      'api::review.review'
+    >;
+    locale: Attribute.String;
   };
 }
 
@@ -997,6 +1078,7 @@ declare module '@strapi/types' {
       'api::my-wish-list.my-wish-list': ApiMyWishListMyWishList;
       'api::order.order': ApiOrderOrder;
       'api::product.product': ApiProductProduct;
+      'api::review.review': ApiReviewReview;
     }
   }
 }
