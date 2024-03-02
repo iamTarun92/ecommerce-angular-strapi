@@ -1,0 +1,16 @@
+<div class="rate">
+  <ng-container *ngFor="let star of ratingStar.reverse()">
+    <input
+      type="radio"
+      [name]="name"
+      [id]="name + '-star-' + star"
+      [value]="star"
+      [checked]="isStarSelected(star)"
+      (change)="onRatingChanged(star)"
+      [disabled]="readOnly"
+    />
+    <label [for]="name + '-star-' + star" title="{{ star }} Star">{{
+      star
+    }}</label>
+  </ng-container>
+</div>

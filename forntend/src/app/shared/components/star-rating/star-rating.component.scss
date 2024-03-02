@@ -1,0 +1,58 @@
+.rate {
+  float: left;
+  padding: 0 10px 0 0;
+
+  &:not(:checked) {
+    > {
+      input {
+        position: absolute;
+        top: -9999px;
+      }
+
+      label {
+        float: right;
+        width: 15px;
+        overflow: hidden;
+        white-space: nowrap;
+        cursor: pointer;
+        font-size: 21px;
+        color: #ccc;
+        margin-bottom: 0;
+        line-height: 21px;
+
+        &:before {
+          content: "\2605";
+        }
+      }
+    }
+
+    > label:hover {
+      color: #deb217;
+
+      ~ label {
+        color: #deb217;
+      }
+    }
+  }
+
+  > input:checked ~ label {
+    color: #ffc700;
+  }
+
+  > {
+    input:checked {
+      + label:hover,
+      ~ label:hover {
+        color: #c59b08;
+
+        ~ label {
+          color: #c59b08;
+        }
+      }
+    }
+
+    label:hover ~ input:checked ~ label {
+      color: #c59b08;
+    }
+  }
+}
