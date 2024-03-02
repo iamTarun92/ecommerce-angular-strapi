@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Observable } from 'rxjs';
 import { CartService, WishlistService } from 'src/app/core/core.index';
 import { ProductData } from 'src/app/core/models/product';
 import { AuthService } from 'src/app/core/services/auth/auth.service';
@@ -11,11 +12,16 @@ import { ApiService } from 'src/app/core/services/common/api.service';
   styleUrls: ['./product-detail.component.scss']
 })
 export class ProductDetailComponent {
+  @ViewChild('closeBtn') closeBtn!: ElementRef;
+
   id: any;
+  isLoggedIn$!: Observable<boolean>;
   product: any;
   quantity = 1
   currentUser: any
   wishListItems: any
+  selectedRating = 1
+  description = ''
 
   constructor(
     private apiService: ApiService,
@@ -27,6 +33,7 @@ export class ProductDetailComponent {
   ) { }
 
   ngOnInit(): void {
+    this.isLoggedIn$ = this.authService.isLoggedIn();
     this.currentUser = JSON.parse(this.authService.getCurrentUser() || '{}')
 
     this.activeRoute.params.subscribe(data => {
@@ -48,14 +55,8 @@ export class ProductDetailComponent {
     })
   }
 
-  increaseQuantity() {
-    this.quantity++;
-  }
-
-  decreaseQuantity() {
-    if (this.quantity > 0) {
-      this.quantity--;
-    }
+  get isFormValid(): boolean {
+    return this.selectedRating > 0 && this.description !== ''
   }
 
   selectedCartItem(id: number) {
@@ -126,8 +127,33 @@ export class ProductDetailComponent {
   loadWishListItems() {
     this.wishListService.getWishlistItems().subscribe({
       next: (response) => {
+        this.wishListService.wishListCount.next(response.data.length)
+
         this.wishListItems = response.data.filter((item: any) => item.attributes.email === this.currentUser.email)
       }
     })
+  }
+  submitReview(reviewDescription: any) {
+    const data = {
+      "data": {
+        "content": reviewDescription.value,
+        "note": this.selectedRating,
+        "product": this.product,
+        "author": this.currentUser
+      }
+    }
+    this.apiService.addReview(data).subscribe({
+      next: (res) => {
+        alert('Review added successfully.')
+        const closeBtn = this.closeBtn.nativeElement as HTMLElement
+        closeBtn.click()
+        this.selectedRating = 0
+        this.description = ''
+      }
+    })
+  }
+
+  onRatingChanged(rating: number) {
+    this.selectedRating = rating;
   }
 }

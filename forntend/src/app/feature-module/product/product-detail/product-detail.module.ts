@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 
 import { ProductDetailRoutingModule } from './product-detail-routing.module';
 import { ProductDetailComponent } from './product-detail.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 
 @NgModule({
@@ -11,7 +13,9 @@ import { ProductDetailComponent } from './product-detail.component';
   ],
   imports: [
     CommonModule,
-    ProductDetailRoutingModule
+    ProductDetailRoutingModule,
+    FormsModule,
+    SharedModule
   ]
 })
 export class ProductDetailModule { }

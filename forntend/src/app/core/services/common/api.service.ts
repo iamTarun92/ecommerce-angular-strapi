@@ -62,4 +62,10 @@ export class ApiService {
         const url = `/orders?filters[orderId][$eq]=${orderId}`
         return this.http.get<OrderRoot>(this.baseUrl + url).pipe(map(data => data as OrderRoot))
     }
+
+    // send data to review
+    addReview(review: any): Observable<any> {
+        const url = this.baseUrl + '/reviews'
+        return this.http.post<any>(url, review)
+    }
 }

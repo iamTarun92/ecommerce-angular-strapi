@@ -108,15 +108,32 @@
         <li class="nav-item">
           <div class="dropdown">
             <a
-              class="nav-link mx-2 text-uppercase"
+              class="btn btn-outline-primary mx-2 text-uppercase"
               href="#"
               data-bs-toggle="dropdown"
               ><i class="bi bi-person"></i> Account</a
             >
             <ul class="dropdown-menu" *ngIf="isLoggedIn$ | async">
               <li>
-                <a class="dropdown-item" routerLink="wishlist">
-                  Wishlist <span class="count">{{ wishListCount }}</span></a
+                <a
+                  class="dropdown-item align-items-center d-flex justify-content-between"
+                  routerLink="wishlist"
+                >
+                  Wishlist
+                  <span class="count position-relative">{{
+                    wishListCount
+                  }}</span></a
+                >
+              </li>
+              <li>
+                <a
+                  class="dropdown-item align-items-center d-flex justify-content-between"
+                  routerLink="orders"
+                >
+                  Orders
+                  <span class="count position-relative">{{
+                    wishListCount
+                  }}</span></a
                 >
               </li>
             </ul>

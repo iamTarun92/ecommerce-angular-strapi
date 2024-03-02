@@ -1,28 +1,6 @@
 <div class="container mt-5" *ngIf="product">
   <div class="row">
     <div class="bg-body-tertiary col-md-6 p-4 text-center position-relative">
-      <div class="end-0 position-absolute top-0">
-        <button class="btn" *ngIf="isItemExistsInWishlist(product)">
-          <i
-            class="bi bi-heart-fill text-danger fs-4"
-            (click)="handleRemoveWishList(product.id)"
-          ></i>
-        </button>
-        <button
-          class="btn"
-          *ngIf="!isItemExistsInWishlist(product)"
-        >
-          <i
-            class="bi bi-heart text-danger fs-4"
-            (click)="
-              handleAddToWishList(
-                currentUser.email,
-                product.id.toString()
-              )
-            "
-          ></i>
-        </button>
-      </div>
       <img
         [src]="
           'http://localhost:1337' + product.attributes.image.data.attributes.url
@@ -32,20 +10,15 @@
     <div class="col-md-6">
       <div class="product-dtl">
         <div class="product-info">
-          <div class="product-name text-uppercase">{{ product.name }}</div>
+          <div class="product-name text-uppercase">
+            {{ product.attributes.name }}
+          </div>
           <div class="reviews-counter">
-            <div class="rate">
-              <input type="radio" id="star5" name="rate" value="5" checked />
-              <label for="star5" title="text">5 stars</label>
-              <input type="radio" id="star4" name="rate" value="4" checked />
-              <label for="star4" title="text">4 stars</label>
-              <input type="radio" id="star3" name="rate" value="3" checked />
-              <label for="star3" title="text">3 stars</label>
-              <input type="radio" id="star2" name="rate" value="2" />
-              <label for="star2" title="text">2 stars</label>
-              <input type="radio" id="star1" name="rate" value="1" />
-              <label for="star1" title="text">1 star</label>
-            </div>
+            <app-star-rating
+              [rating]="5"
+              name="rating-1"
+              [readOnly]="true"
+            ></app-star-rating>
             <span>3 Reviews</span>
           </div>
           <div class="product-price-discount">
@@ -73,7 +46,7 @@
           {{ product.description }}
         </p>
         <div class="row">
-          <div class="col-md-6">
+          <div class="col-md-4">
             <label for="size">Size</label>
             <select id="size" name="size" class="form-control">
               <option>S</option>
@@ -82,7 +55,7 @@
               <option>XL</option>
             </select>
           </div>
-          <div class="col-md-6">
+          <div class="col-md-4">
             <label for="color">Color</label>
             <select id="color" name="color" class="form-control">
               <option>Blue</option>
@@ -90,27 +63,107 @@
               <option>Red</option>
             </select>
           </div>
-        </div>
-        <div class="product-count">
-          <label for="size">Quantity</label>
-          <form action="#" class="display-flex">
-            <div class="qtyminus" (click)="decreaseQuantity()">-</div>
-            <input type="text" name="quantity" [value]="quantity" class="qty" />
-            <div class="qtyplus" (click)="increaseQuantity()">+</div>
-          </form>
-          <div class="mt-5">
-            <button class="btn btn-primary p-2" (click)="addToCart(product)">
-              Add to Cart
-            </button>
-            <button
-              routerLink="/cart"
-              class="btn btn-outline-primary ms-3 p-2"
-              *ngIf="isItemExists(product)"
-            >
-              Go to Cart
-            </button>
+          <div class="col-md-4">
+            <label for="quantity">Quantity</label>
+            <input
+              type="number"
+              min="1"
+              name="quantity"
+              id="quantity"
+              class="form-control form-control-sm"
+            />
           </div>
         </div>
+        <div class="product-count d-flex align-items-end">
+          <button class="btn btn-primary p-2" (click)="addToCart(product)">
+            Add to Cart
+          </button>
+          <button
+            routerLink="/cart"
+            class="btn btn-outline-primary ms-3 p-2"
+            *ngIf="isItemExists(product)"
+          >
+            Go to Cart
+          </button>
+          <button
+            type="button"
+            *ngIf="isLoggedIn$ | async"
+            class="btn btn-primary ms-auto"
+            data-bs-toggle="modal"
+            data-bs-target="#exampleModal"
+          >
+            Rate Product
+          </button>
+          <button
+            type="button"
+            *ngIf="!(isLoggedIn$ | async)"
+            class="btn btn-primary ms-auto"
+            routerLink="/login"
+          >
+            Rate Product
+          </button>
+        </div>
+        <button
+          *ngIf="isItemExistsInWishlist(product)"
+          class="btn btn-outline-danger mt-4 bi-heart-fill"
+          routerLink="/wishlist"
+        >
+          Remove To Wishlist
+        </button>
+        <button
+          *ngIf="!isItemExistsInWishlist(product)"
+          class="btn btn-outline-danger bi-heart mt-4"
+          (click)="
+            handleAddToWishList(currentUser.email, product.id.toString())
+          "
+        >
+          Add To Wishlist
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal" tabindex="-1" id="exampleModal">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Review this product</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+          #closeBtn
+        ></button>
+      </div>
+      <div class="modal-body">
+        <p class="mb-0">Rating</p>
+        <div class="reviews-counter d-inline-block">
+          <app-star-rating
+            name="rating-2"
+            (ratingChanged)="onRatingChanged($event)"
+          ></app-star-rating>
+        </div>
+        <p class="mb-0 mt-4">Description</p>
+        <textarea
+          #reviewDescription
+          class="w-100"
+          [(ngModel)]="description"
+        ></textarea>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Close
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="submitReview(reviewDescription)"
+          [disabled]="!isFormValid"
+        >
+          Save changes
+        </button>
       </div>
     </div>
   </div>
