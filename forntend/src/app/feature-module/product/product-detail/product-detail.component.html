@@ -15,11 +15,11 @@
           </div>
           <div class="reviews-counter">
             <app-star-rating
-              [rating]="5"
-              name="rating-1"
+              [rating]="selectedRating"
               [readOnly]="true"
+              name="rating-1"
             ></app-star-rating>
-            <span>3 Reviews</span>
+            <span>{{ allReview.length }} Reviews</span>
           </div>
           <div class="product-price-discount">
             <ng-container *ngIf="hasSpecialPrice(product); else hasSpecial">
@@ -141,8 +141,9 @@
         <p class="mb-0">Rating</p>
         <div class="reviews-counter d-inline-block">
           <app-star-rating
-            name="rating-2"
+            [rating]="selectedRating"
             (ratingChanged)="onRatingChanged($event)"
+            name="rating-2"
           ></app-star-rating>
         </div>
         <p class="mb-0 mt-4">Description</p>
@@ -159,7 +160,7 @@
         <button
           type="button"
           class="btn btn-primary"
-          (click)="submitReview(reviewDescription)"
+          (click)="saveReview(reviewDescription)"
           [disabled]="!isFormValid"
         >
           Save changes

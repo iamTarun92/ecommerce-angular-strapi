@@ -4,6 +4,7 @@ import { Observable, map, tap } from 'rxjs';
 import { ProductRoot } from '../../models/product';
 import { CategoriesRoot } from '../../models/categories';
 import { OrderRoot } from '../../models/order';
+import { ReviewRoot } from '../../models/review';
 
 
 @Injectable({
@@ -33,7 +34,7 @@ export class ApiService {
         const url = `/products?populate=*`
         return this.http.get<ProductRoot>(this.baseUrl + url).pipe(map(data => data as ProductRoot))
     }
-    fetchProductById(id: string): Observable<ProductRoot> {
+    fetchProductById(id: number): Observable<ProductRoot> {
         const url = `/products/${id}?populate=*`
         return this.http.get<ProductRoot>(this.baseUrl + url).pipe(map(data => data as ProductRoot))
     }
@@ -63,9 +64,17 @@ export class ApiService {
         return this.http.get<OrderRoot>(this.baseUrl + url).pipe(map(data => data as OrderRoot))
     }
 
-    // send data to review
+    fetchReviewByProductId(productId: number): Observable<ReviewRoot> {
+        const url = this.baseUrl + `/reviews?filters[product][id][$eq]=${productId}&populate=*`
+        return this.http.get<ReviewRoot>(url).pipe(map(data => data))
+    }
+
     addReview(review: any): Observable<any> {
         const url = this.baseUrl + '/reviews'
         return this.http.post<any>(url, review)
+    }
+    updateReview(review: any, id: number): Observable<any> {
+        const url = `${this.baseUrl}/reviews/${id}`
+        return this.http.put<any>(url, review)
     }
 }

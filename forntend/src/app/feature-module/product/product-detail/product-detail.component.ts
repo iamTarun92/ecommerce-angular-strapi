@@ -1,8 +1,10 @@
-import { Component, ViewChild, ElementRef } from '@angular/core';
+import { Component, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { CartService, WishlistService } from 'src/app/core/core.index';
 import { ProductData } from 'src/app/core/models/product';
+import { ReviewData } from 'src/app/core/models/review';
+import { User } from 'src/app/core/models/user';
 import { AuthService } from 'src/app/core/services/auth/auth.service';
 import { ApiService } from 'src/app/core/services/common/api.service';
 
@@ -18,10 +20,11 @@ export class ProductDetailComponent {
   isLoggedIn$!: Observable<boolean>;
   product: any;
   quantity = 1
-  currentUser: any
+  currentUser!: User;
   wishListItems: any
   selectedRating = 1
   description = ''
+  allReview: ReviewData[] = []
 
   constructor(
     private apiService: ApiService,
@@ -29,8 +32,11 @@ export class ProductDetailComponent {
     private router: Router,
     private cartService: CartService,
     private wishListService: WishlistService,
-    private authService: AuthService
-  ) { }
+    private authService: AuthService,
+    private ref: ChangeDetectorRef
+  ) {
+
+  }
 
   ngOnInit(): void {
     this.isLoggedIn$ = this.authService.isLoggedIn();
@@ -38,32 +44,16 @@ export class ProductDetailComponent {
 
     this.activeRoute.params.subscribe(data => {
       const id = this.activeRoute.snapshot.params['id']
-      this.apiService.fetchProductById(id).subscribe({
-        next: (res: any) => {
-          this.product = res.data
-          if (this.cartService.getCartItems()) {
-            this.updateItemQty(this.cartService.getCartItems(), this.product)
-          }
-          if (this.currentUser) {
-            this.loadWishListItems()
-          }
-        },
-        error: () => {
-          // this.router.navigate([''])
-        }
-      });
+      this.loadReviewByProductId(id)
+      this.loadProductById(id)
     })
   }
 
   get isFormValid(): boolean {
     return this.selectedRating > 0 && this.description !== ''
   }
-
-  selectedCartItem(id: number) {
-    let localCartString = localStorage.getItem('cartItems');
-    if (!localCartString) return false;
-    let localCart = JSON.parse(localCartString);
-    return localCart.find((obj: any) => obj.id === id);
+  get filterReviewByUserEmail() {
+    return this.allReview.find((element) => element.attributes.author.data.attributes.email === this.currentUser?.email)
   }
 
   isItemExists(product: any): boolean {
@@ -102,12 +92,12 @@ export class ProductDetailComponent {
   }
 
   handleAddToWishList(userEmail: string, productId: string) {
-    if (this.authService.getToken()) {
-      const data = {
-        "email": userEmail,
-        "productId": productId
+    const data = {
+      "email": userEmail,
+      "productId": productId
 
-      }
+    }
+    if (this.authService.getToken()) {
       this.wishListService.addToWishlist(data).subscribe({
         next: (res) => {
           this.loadWishListItems()
@@ -129,11 +119,11 @@ export class ProductDetailComponent {
       next: (response) => {
         this.wishListService.wishListCount.next(response.data.length)
 
-        this.wishListItems = response.data.filter((item: any) => item.attributes.email === this.currentUser.email)
+        this.wishListItems = response.data.filter((item: any) => item.attributes.email === this.currentUser?.email)
       }
     })
   }
-  submitReview(reviewDescription: any) {
+  saveReview(reviewDescription: any) {
     const data = {
       "data": {
         "content": reviewDescription.value,
@@ -142,18 +132,52 @@ export class ProductDetailComponent {
         "author": this.currentUser
       }
     }
-    this.apiService.addReview(data).subscribe({
-      next: (res) => {
-        alert('Review added successfully.')
-        const closeBtn = this.closeBtn.nativeElement as HTMLElement
-        closeBtn.click()
-        this.selectedRating = 0
-        this.description = ''
+    if (this.filterReviewByUserEmail) {
+      this.apiService.updateReview(data, this.filterReviewByUserEmail.id).subscribe({
+        next: (res) => {
+          alert('Review added successfully.')
+          const closeBtn = this.closeBtn.nativeElement as HTMLElement
+          closeBtn.click()
+          this.selectedRating = 0
+          this.description = ''
+        }
+      })
+    } else {
+      this.apiService.addReview(data).subscribe({
+        next: (res) => {
+          alert('Review added successfully.')
+          const closeBtn = this.closeBtn.nativeElement as HTMLElement
+          closeBtn.click()
+          this.selectedRating = 0
+          this.description = ''
+        }
+      })
+    }
+  }
+  onRatingChanged(rating: number) {
+    this.selectedRating = rating;
+  }
+  loadReviewByProductId(id: number) {
+    this.apiService.fetchReviewByProductId(id).subscribe({
+      next: (reviewResponse) => {
+        this.allReview = reviewResponse.data
       }
     })
   }
-
-  onRatingChanged(rating: number) {
-    this.selectedRating = rating;
+  loadProductById(id: number) {
+    this.apiService.fetchProductById(id).subscribe({
+      next: (res: any) => {
+        this.product = res.data
+        if (this.cartService.getCartItems()) {
+          this.updateItemQty(this.cartService.getCartItems(), this.product)
+        }
+        if (this.currentUser) {
+          this.loadWishListItems()
+        }
+      },
+      error: () => {
+        // this.router.navigate([''])
+      }
+    });
   }
 }
