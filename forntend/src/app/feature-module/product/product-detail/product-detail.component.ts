@@ -22,8 +22,9 @@ export class ProductDetailComponent {
   quantity = 1
   currentUser!: User;
   wishListItems: any
-  selectedRating = 1
+  selectedRating = 0
   description = ''
+  productId = 0
   allReview: ReviewData[] = []
 
   constructor(
@@ -37,28 +38,32 @@ export class ProductDetailComponent {
   ) {
 
   }
+  get isFormValid(): boolean {
+    return this.selectedRating > 0 && this.description !== ''
+  }
+  get filterReviewByUserEmail(): any {
+    return this.allReview.find((element) => element.attributes.author.data.attributes.email)
+  }
+  get subTotalNote() {
+    const notes = this.allReview.map(review => review.attributes.note);
+    return notes.reduce((acc, current) => acc + current, 0);
+  }
 
   ngOnInit(): void {
     this.isLoggedIn$ = this.authService.isLoggedIn();
     this.currentUser = JSON.parse(this.authService.getCurrentUser() || '{}')
 
     this.activeRoute.params.subscribe(data => {
-      const id = this.activeRoute.snapshot.params['id']
-      this.loadReviewByProductId(id)
-      this.loadProductById(id)
+      this.productId = this.activeRoute.snapshot.params['id']
+      this.loadReviewByProductId(this.productId)
+      this.loadProductById(this.productId)
     })
-  }
-
-  get isFormValid(): boolean {
-    return this.selectedRating > 0 && this.description !== ''
-  }
-  get filterReviewByUserEmail() {
-    return this.allReview.find((element) => element.attributes.author.data.attributes.email === this.currentUser?.email)
   }
 
   isItemExists(product: any): boolean {
     return this.cartService.itemInCart(product)
   }
+
   updateItemQty(arr: any, item: any): void {
     const existingItem = arr.find((cartItem: any) => cartItem.id === item.id);
     if (existingItem) {
@@ -66,6 +71,7 @@ export class ProductDetailComponent {
     }
 
   }
+
   isItemExistsInWishlist(product: any): boolean {
     return this.wishListItems?.findIndex((o: any) => parseInt(o.attributes.productId) === product.id) > -1;
   }
@@ -114,16 +120,11 @@ export class ProductDetailComponent {
   handleRemoveWishList(productId: number) {
     alert('This product is already added.')
   }
-  loadWishListItems() {
-    this.wishListService.getWishlistItems().subscribe({
-      next: (response) => {
-        this.wishListService.wishListCount.next(response.data.length)
 
-        this.wishListItems = response.data.filter((item: any) => item.attributes.email === this.currentUser?.email)
-      }
-    })
-  }
   saveReview(reviewDescription: any) {
+
+    const closeBtn = this.closeBtn.nativeElement as HTMLElement
+
     const data = {
       "data": {
         "content": reviewDescription.value,
@@ -136,7 +137,7 @@ export class ProductDetailComponent {
       this.apiService.updateReview(data, this.filterReviewByUserEmail.id).subscribe({
         next: (res) => {
           alert('Review added successfully.')
-          const closeBtn = this.closeBtn.nativeElement as HTMLElement
+          this.loadReviewByProductId(this.productId)          
           closeBtn.click()
           this.selectedRating = 0
           this.description = ''
@@ -146,7 +147,7 @@ export class ProductDetailComponent {
       this.apiService.addReview(data).subscribe({
         next: (res) => {
           alert('Review added successfully.')
-          const closeBtn = this.closeBtn.nativeElement as HTMLElement
+          this.loadReviewByProductId(this.productId)
           closeBtn.click()
           this.selectedRating = 0
           this.description = ''
@@ -157,10 +158,21 @@ export class ProductDetailComponent {
   onRatingChanged(rating: number) {
     this.selectedRating = rating;
   }
+  loadWishListItems() {
+    this.wishListService.getWishlistItems().subscribe({
+      next: (response) => {
+        this.wishListService.wishListCount.next(response.data.length)
+        this.wishListItems = response.data.filter((item: any) => item.attributes.email === this.currentUser?.email)
+      }
+    })
+  }
   loadReviewByProductId(id: number) {
     this.apiService.fetchReviewByProductId(id).subscribe({
       next: (reviewResponse) => {
         this.allReview = reviewResponse.data
+
+        const currentReview = this.filterReviewByUserEmail
+        this.description = currentReview?.attributes.content
       }
     })
   }

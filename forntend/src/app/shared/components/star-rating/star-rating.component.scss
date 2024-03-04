@@ -25,7 +25,9 @@
         }
       }
     }
+  }
 
+  &:not(.disable-hover) {
     > label:hover {
       color: #deb217;
 
@@ -33,26 +35,27 @@
         color: #deb217;
       }
     }
+
+    > {
+      input:checked {
+        + label:hover,
+        ~ label:hover {
+          color: #c59b08;
+
+          ~ label {
+            color: #c59b08;
+          }
+        }
+      }
+    }
+    > {
+      label:hover ~ input:checked ~ label {
+        color: #c59b08;
+      }
+    }
   }
 
   > input:checked ~ label {
     color: #ffc700;
-  }
-
-  > {
-    input:checked {
-      + label:hover,
-      ~ label:hover {
-        color: #c59b08;
-
-        ~ label {
-          color: #c59b08;
-        }
-      }
-    }
-
-    label:hover ~ input:checked ~ label {
-      color: #c59b08;
-    }
   }
 }

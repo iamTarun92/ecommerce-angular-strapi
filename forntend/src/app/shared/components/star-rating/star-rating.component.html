@@ -1,4 +1,4 @@
-<div class="rate">
+<div class="rate" [ngClass]="{'disable-hover': readOnly}">
   <ng-container *ngFor="let star of ratingStar.reverse()">
     <input
       type="radio"

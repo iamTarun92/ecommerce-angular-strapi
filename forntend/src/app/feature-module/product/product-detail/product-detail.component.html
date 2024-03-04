@@ -15,10 +15,11 @@
           </div>
           <div class="reviews-counter">
             <app-star-rating
-              [rating]="selectedRating"
+              [rating]="filterReviewByUserEmail?filterReviewByUserEmail.attributes.note:selectedRating"
               [readOnly]="true"
               name="rating-1"
             ></app-star-rating>
+            <!-- <span>{{ subTotalNote }} Rating & </span> -->
             <span>{{ allReview.length }} Reviews</span>
           </div>
           <div class="product-price-discount">
@@ -70,6 +71,7 @@
               min="1"
               name="quantity"
               id="quantity"
+              [value]="quantity"
               class="form-control form-control-sm"
             />
           </div>
@@ -122,49 +124,52 @@
       </div>
     </div>
   </div>
-</div>
-
-<div class="modal" tabindex="-1" id="exampleModal">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Review this product</h5>
-        <button
-          type="button"
-          class="btn-close"
-          data-bs-dismiss="modal"
-          aria-label="Close"
-          #closeBtn
-        ></button>
-      </div>
-      <div class="modal-body">
-        <p class="mb-0">Rating</p>
-        <div class="reviews-counter d-inline-block">
-          <app-star-rating
-            [rating]="selectedRating"
-            (ratingChanged)="onRatingChanged($event)"
-            name="rating-2"
-          ></app-star-rating>
+  <div class="modal" tabindex="-1" id="exampleModal">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Review this product</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+            #closeBtn
+          ></button>
         </div>
-        <p class="mb-0 mt-4">Description</p>
-        <textarea
-          #reviewDescription
-          class="w-100"
-          [(ngModel)]="description"
-        ></textarea>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-          Close
-        </button>
-        <button
-          type="button"
-          class="btn btn-primary"
-          (click)="saveReview(reviewDescription)"
-          [disabled]="!isFormValid"
-        >
-          Save changes
-        </button>
+        <div class="modal-body">
+          <p class="mb-0">Rating</p>
+          <div class="reviews-counter d-inline-block">
+            <app-star-rating
+              [rating]="filterReviewByUserEmail?filterReviewByUserEmail.attributes.note:selectedRating"
+              (ratingChanged)="onRatingChanged($event)"
+              name="rating-2"
+            ></app-star-rating>
+          </div>
+          <p class="mb-0 mt-4">Description</p>
+          <textarea
+            #reviewDescription
+            class="w-100"
+            [(ngModel)]="description"
+          ></textarea>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Close
+          </button>
+          <button
+            type="button"
+            class="btn btn-primary"
+            (click)="saveReview(reviewDescription)"
+            [disabled]="!isFormValid"
+          >
+            Save changes
+          </button>
+        </div>
       </div>
     </div>
   </div>

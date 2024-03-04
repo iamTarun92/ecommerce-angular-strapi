@@ -22,12 +22,12 @@ export class StarRatingComponent implements OnInit {
   // Function to handle rating selection
   onRatingChanged(star: number) {
     if (!this.readOnly) {
-      this.selectedStar = star;
-      this.ratingChanged.emit(this.selectedStar);
+      this.rating = star;
+      this.ratingChanged.emit(this.rating);
     }
   }
 
   isStarSelected(star: number): boolean {
-    return star === this.selectedStar;
+    return star === this.rating;
   }
 }
