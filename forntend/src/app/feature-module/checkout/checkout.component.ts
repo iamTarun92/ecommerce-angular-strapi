@@ -5,6 +5,7 @@ import { ApiService, CartService, CouponService } from 'src/app/core/core.index'
 import { CouponData } from 'src/app/core/models/coupon-codes';
 import { ProductData } from 'src/app/core/models/product';
 import { AuthService } from 'src/app/core/services/auth/auth.service';
+import emailjs from '@emailjs/browser';
 
 @Component({
   selector: 'app-checkout',
@@ -21,7 +22,7 @@ export class CheckoutComponent implements OnInit {
   paymentMethods = [
     { id: 1, name: 'Cash on delivery', value: 'COD' },
   ];
-  selectedPaymentMethod = null;
+  selectedPaymentMethod: string | null = null;
   isDelivery = false
   ItemTotalPrice = 0
   subTotal = 0
@@ -32,6 +33,10 @@ export class CheckoutComponent implements OnInit {
   isMinOrder: boolean | null = null;
   couponData: CouponData | null = null
   duplicateCouponCode: boolean | null = null;
+  otpArray = [1, 2, 3, 4, 5];
+  randomIndex = Math.floor(Math.random() * this.otpArray.length);
+  randomNumber = this.otpArray[this.randomIndex];
+  otp: any
 
 
 
@@ -83,7 +88,7 @@ export class CheckoutComponent implements OnInit {
   }
 
   get isCheckedAddressForm() {
-    return this.billingAddressForm.valid && this.selectedPaymentMethod
+    return this.billingAddressForm.valid && this.selectedPaymentMethod && this.otpCheck(+this.otp)
   }
 
   isOrderConfirm() {
@@ -180,6 +185,21 @@ export class CheckoutComponent implements OnInit {
         }
       }
     })
+  }
+
+  sendOtp(user: any) {
+    emailjs.init("_u6qKPa9-76niq83g")
+    emailjs.send("service_tjvnsxq", "template_7uud2sl", {
+      from_name: "tarunpandey@promantus.com",
+      to_name: this.currentUser.username,
+      message: this.otpArray[this.randomNumber],
+      to: this.currentUser.email,
+    });
+
+    alert('OTP send to your email.')
+  }
+  otpCheck(num: number) {
+    return this.otpArray.includes(num)
   }
 
 }

@@ -467,11 +467,25 @@
                   [(ngModel)]="selectedPaymentMethod"
                   [value]="method.value"
                   [id]="method.name"
+                  (change)="sendOtp(currentUser)"
                 />
                 <span class="ms-2">{{ method.name }}</span></label
               >
             </div>
           </div>
+          <input type="text" *ngIf="selectedPaymentMethod" [(ngModel)]="otp" />
+          <p
+            *ngIf="selectedPaymentMethod && otp && otpCheck(+otp)"
+            class="text-success"
+          >
+            Otp is correct.
+          </p>
+          <p
+            *ngIf="selectedPaymentMethod && otp && !otpCheck(+otp)"
+            class="text-danger"
+          >
+            Otp is not correct.
+          </p>
         </div>
       </div>
     </div>
