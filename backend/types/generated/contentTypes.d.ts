@@ -786,6 +786,45 @@ export interface PluginI18NLocale extends Schema.CollectionType {
   };
 }
 
+export interface ApiAddressAddress extends Schema.CollectionType {
+  collectionName: 'addresses';
+  info: {
+    singularName: 'address';
+    pluralName: 'addresses';
+    displayName: 'address';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    email: Attribute.String;
+    phone: Attribute.String;
+    address: Attribute.String;
+    city: Attribute.String;
+    state: Attribute.String;
+    zip: Attribute.String;
+    primary: Attribute.Boolean;
+    type: Attribute.Enumeration<['Home', 'Work']>;
+    fullName: Attribute.String;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::address.address',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::address.address',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
 export interface ApiCategoryCategory extends Schema.CollectionType {
   collectionName: 'categories';
   info: {
@@ -949,7 +988,7 @@ export interface ApiProductProduct extends Schema.CollectionType {
   };
   attributes: {
     name: Attribute.String & Attribute.Required;
-    slug: Attribute.UID & Attribute.Required;
+    slug: Attribute.UID<'api::product.product', 'name'> & Attribute.Required;
     image: Attribute.Media & Attribute.Required;
     description: Attribute.Text;
     stockQuantity: Attribute.String;
@@ -959,8 +998,8 @@ export interface ApiProductProduct extends Schema.CollectionType {
       'api::category.category'
     >;
     isFixedPrice: Attribute.Boolean;
-    price: Attribute.Integer & Attribute.Required;
-    specialPrice: Attribute.Integer;
+    price: Attribute.Decimal & Attribute.Required;
+    specialPrice: Attribute.Decimal;
     reviews: Attribute.Relation<
       'api::product.product',
       'oneToMany',
@@ -1055,6 +1094,83 @@ export interface ApiReviewReview extends Schema.CollectionType {
   };
 }
 
+export interface ApiTestProductTestProduct extends Schema.CollectionType {
+  collectionName: 'test_products';
+  info: {
+    singularName: 'test-product';
+    pluralName: 'test-products';
+    displayName: 'testProduct';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    name: Attribute.String;
+    slug: Attribute.UID;
+    price: Attribute.Decimal;
+    images: Attribute.Media;
+    sale: Attribute.Decimal;
+    stock: Attribute.Integer;
+    attributes: Attribute.JSON;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::test-product.test-product',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::test-product.test-product',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiVariationVariation extends Schema.SingleType {
+  collectionName: 'variations';
+  info: {
+    singularName: 'variation';
+    pluralName: 'variations';
+    displayName: 'variation';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    name: Attribute.String;
+    slug: Attribute.UID;
+    price: Attribute.Decimal;
+    images: Attribute.Media;
+    sale: Attribute.Decimal;
+    stock: Attribute.Integer;
+    product: Attribute.Relation<
+      'api::variation.variation',
+      'oneToMany',
+      'api::test-product.test-product'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::variation.variation',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::variation.variation',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
 declare module '@strapi/types' {
   export module Shared {
     export interface ContentTypes {
@@ -1073,12 +1189,15 @@ declare module '@strapi/types' {
       'plugin::users-permissions.role': PluginUsersPermissionsRole;
       'plugin::users-permissions.user': PluginUsersPermissionsUser;
       'plugin::i18n.locale': PluginI18NLocale;
+      'api::address.address': ApiAddressAddress;
       'api::category.category': ApiCategoryCategory;
       'api::coupon-code.coupon-code': ApiCouponCodeCouponCode;
       'api::my-wish-list.my-wish-list': ApiMyWishListMyWishList;
       'api::order.order': ApiOrderOrder;
       'api::product.product': ApiProductProduct;
       'api::review.review': ApiReviewReview;
+      'api::test-product.test-product': ApiTestProductTestProduct;
+      'api::variation.variation': ApiVariationVariation;
     }
   }
 }

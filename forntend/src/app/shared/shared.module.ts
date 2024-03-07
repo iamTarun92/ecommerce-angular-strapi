@@ -1,20 +1,26 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { StarRatingComponent } from './components/star-rating/star-rating.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { AddressSelectionComponent } from './components/address-selection/address-selection.component';
 
 
 
 @NgModule({
   declarations: [
-    StarRatingComponent
+    StarRatingComponent,
+    AddressSelectionComponent
   ],
   imports: [
     CommonModule,
+    ReactiveFormsModule,
     FormsModule
   ],
   exports: [
-    StarRatingComponent
+    ReactiveFormsModule,
+    FormsModule,
+    StarRatingComponent,
+    AddressSelectionComponent
   ]
 })
 export class SharedModule { }

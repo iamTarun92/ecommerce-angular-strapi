@@ -5,6 +5,7 @@ import { ProductRoot } from '../../models/product';
 import { CategoriesRoot } from '../../models/categories';
 import { OrderRoot } from '../../models/order';
 import { ReviewRoot } from '../../models/review';
+import { AddressRoot } from '../../models/address';
 
 
 @Injectable({
@@ -76,5 +77,18 @@ export class ApiService {
     updateReview(review: any, id: number): Observable<any> {
         const url = `${this.baseUrl}/reviews/${id}`
         return this.http.put<any>(url, review)
+    }
+
+    addAddress(data: any): Observable<any> {
+        const url = `${this.baseUrl}/addresses`
+        return this.http.post<any>(url, data)
+    }
+    updateAddress(data: any, id: number): Observable<any> {
+        const url = `${this.baseUrl}/addresses/${id}`
+        return this.http.put<any>(url, data)
+    }
+    fetchAddressByEmail(email: string): Observable<AddressRoot> {
+        const url = `${this.baseUrl}/addresses?filters[email][$eq]=${email}&populate=*`
+        return this.http.get<AddressRoot>(url).pipe(map(data => data as AddressRoot))
     }
 }

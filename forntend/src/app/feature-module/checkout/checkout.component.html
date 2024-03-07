@@ -11,7 +11,7 @@
       </div>
     </div>
     <div class="col-12">
-      <div class="row">
+      <!-- <div class="row">
         <div class="col-6">
           <div class="card">
             <div class="card-header text-uppercase fw-bold">
@@ -354,6 +354,33 @@
               </form>
             </div>
           </div>
+        </div>
+      </div> -->
+    </div>
+
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header text-uppercase fw-bold">Billing Address</div>
+        <div class="card-body">
+          <app-address-selection
+            [addresses]="allAddress"
+            [currentUser]="currentUser"
+            (addressSelected)="onAddressSelected($event)"
+            name="billing"
+          ></app-address-selection>
+        </div>
+      </div>
+    </div>
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header text-uppercase fw-bold">Delivery Address</div>
+        <div class="card-body">
+          <app-address-selection
+            [addresses]="allAddress"
+            [currentUser]="currentUser"
+            (addressSelected)="onAddressSelected($event)"
+            name="delivery"
+          ></app-address-selection>
         </div>
       </div>
     </div>

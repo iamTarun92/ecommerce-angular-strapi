@@ -6,6 +6,7 @@ import { CouponData } from 'src/app/core/models/coupon-codes';
 import { ProductData } from 'src/app/core/models/product';
 import { AuthService } from 'src/app/core/services/auth/auth.service';
 import emailjs from '@emailjs/browser';
+import { AddressAttributes, AddressData } from 'src/app/core/models/address';
 
 @Component({
   selector: 'app-checkout',
@@ -17,6 +18,7 @@ export class CheckoutComponent implements OnInit {
   baseUrl = 'http://localhost:1337'
   billingAddressForm!: FormGroup
   deliveryAddressForm!: FormGroup
+
   cartItems: any[] = [];
   currentUser: any
   paymentMethods = [
@@ -37,12 +39,22 @@ export class CheckoutComponent implements OnInit {
   randomIndex = Math.floor(Math.random() * this.otpArray.length);
   randomNumber = this.otpArray[this.randomIndex];
   otp: any
+  allAddress: AddressData[] = []
+  selectedAddress!: any | AddressAttributes;
 
-
-
-  constructor(private fb: FormBuilder, private authService: AuthService, private cartService: CartService, private router: Router, private apiService: ApiService, private couponService: CouponService) { }
+  constructor(
+    private fb: FormBuilder,
+    private authService: AuthService,
+    private cartService: CartService,
+    private router: Router,
+    private apiService: ApiService,
+    private couponService: CouponService
+  ) { }
 
   ngOnInit(): void {
+    this.currentUser = JSON.parse(this.authService.getCurrentUser() || '{}')
+
+    this.loadAddress()
     if (!this.cartService.getCartItems()) {
       this.router.navigate([''])
     }
@@ -54,7 +66,6 @@ export class CheckoutComponent implements OnInit {
       this.applyCoupon(this.couponCode, false)
     }
 
-    this.currentUser = JSON.parse(this.authService.getCurrentUser() || '{}')
     this.billingAddressForm = this.fb.group({
       fullName: ['', Validators.required],
       phone: ['', [Validators.required, Validators.pattern('[0-9]{10}')]],
@@ -71,6 +82,7 @@ export class CheckoutComponent implements OnInit {
       state: ['', Validators.required],
       zipCode: ['', [Validators.required, Validators.pattern('[0-9]{5}')]]
     });
+
   }
 
   onSelectPaymentMethod(method: any) {
@@ -138,16 +150,16 @@ export class CheckoutComponent implements OnInit {
   applyCoupon(code: string, check: boolean): void {
     if (check) {
       if (this.couponCode !== localStorage.getItem('couponCode')) {
-        this.callCouponCode(code)
+        this.loadCouponCode(code)
       } else {
         this.duplicateCouponCode = true
       }
     } else {
-      this.callCouponCode(code)
+      this.loadCouponCode(code)
     }
   }
 
-  callCouponCode(code: string): void {
+  loadCouponCode(code: string): void {
     this.couponService.fetchCouponByCode(code).subscribe({
       next: (response) => {
         if (response) {
@@ -157,8 +169,6 @@ export class CheckoutComponent implements OnInit {
           const minOrder = response.attributes.minOrder
           this.isCouponValid = this.couponService.isCouponValid(startDate, endDate)
           this.couponData = response
-          console.log(this.couponData);
-
           if (minOrder <= this.subTotal) {
             if (this.isCouponValid) {
               this.couponDiscount = response.attributes.discount
@@ -186,6 +196,14 @@ export class CheckoutComponent implements OnInit {
       }
     })
   }
+  loadAddress() {
+    this.apiService.fetchAddressByEmail(this.currentUser.email).subscribe({
+      next: res => {
+        this.allAddress = res.data
+        this.selectedAddress = this.allAddress?.find((address) => !!address.attributes.primary)?.attributes
+      }
+    })
+  }
 
   sendOtp(user: any) {
     emailjs.init("_u6qKPa9-76niq83g")
@@ -198,8 +216,12 @@ export class CheckoutComponent implements OnInit {
 
     alert('OTP send to your email.')
   }
+
   otpCheck(num: number) {
     return this.otpArray.includes(num)
   }
 
+  onAddressSelected(address: any) {
+    this.selectedAddress = address;
+  }
 }

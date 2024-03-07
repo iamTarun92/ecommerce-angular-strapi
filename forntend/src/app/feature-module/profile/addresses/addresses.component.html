@@ -1,0 +1,175 @@
+<div class="container">
+  <ng-container *ngIf="!isAddFormSelected; else showAddform">
+    <div class="row">
+      <div class="col-12">
+        <div class="card mt-5">
+          <div class="card-body">
+            <button
+              class="btn btn-primary text-uppercase"
+              (click)="isAddFormSelected = !isAddFormSelected"
+            >
+              Add a New address
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row mt-5">
+      <div class="col-12">
+        <ul class="list-group">
+          <li
+            class="list-group-item"
+            *ngFor="let address of allAddress; let i = index"
+          >
+          <span class="badge bg-secondary">{{address.attributes.type}}</span>
+          <h4>{{address.attributes.fullName}}</h4>
+          <p>{{address.attributes.address}}</p>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </ng-container>
+  <ng-template #showAddform>
+    <div class="card mt-5" *ngIf="isAddFormSelected">
+      <div class="card-body">
+        <h4>Add a New address</h4>
+        <form [formGroup]="addAddressForm" (ngSubmit)="saveAddress()">
+          <div class="form-group mb-2">
+            <label> Full Name: </label>
+            <input
+              type="text"
+              formControlName="fullName"
+              placeholder="name"
+              class="form-control"
+              required
+            />
+            <div
+              *ngIf="
+                addAddressForm.get('fullName')?.invalid &&
+                addAddressForm.get('fullName')?.touched
+              "
+            >
+              <span *ngIf="addAddressForm.get('fullName')?.hasError('required')"
+                >Full name is required</span
+              >
+            </div>
+          </div>
+          <div class="form-group mb-2">
+            <label> Phone: </label>
+            <input
+              type="text"
+              formControlName="phone"
+              placeholder="10-digit mobile number"
+              class="form-control"
+              required
+            />
+            <div
+              *ngIf="
+                addAddressForm.get('phone')?.invalid &&
+                addAddressForm.get('phone')?.touched
+              "
+            >
+              <span *ngIf="addAddressForm.get('phone')?.hasError('required')"
+                >Phone is required</span
+              >
+              <span *ngIf="addAddressForm.get('phone')?.hasError('pattern')"
+                >Phone must be 10 digits</span
+              >
+            </div>
+          </div>
+          <div class="form-group mb-2">
+            <label> Address: </label>
+            <input
+              type="text"
+              formControlName="address"
+              class="form-control"
+              required
+            />
+            <div
+              *ngIf="
+                addAddressForm.get('address')?.invalid &&
+                addAddressForm.get('address')?.touched
+              "
+            >
+              <span *ngIf="addAddressForm.get('address')?.hasError('required')"
+                >Address Line 1 is required</span
+              >
+            </div>
+          </div>
+          <div class="d-flex gap-4 mb-2">
+            <div class="form-group">
+              <label> City: </label>
+              <input
+                type="text"
+                formControlName="city"
+                required
+                class="form-control"
+              />
+              <div
+                *ngIf="
+                  addAddressForm.get('city')?.invalid &&
+                  addAddressForm.get('city')?.touched
+                "
+              >
+                <span *ngIf="addAddressForm.get('city')?.hasError('required')"
+                  >City is required</span
+                >
+              </div>
+            </div>
+            <div class="form-group">
+              <label> State: </label>
+              <input
+                type="text"
+                formControlName="state"
+                required
+                class="form-control"
+              />
+              <div
+                *ngIf="
+                  addAddressForm.get('state')?.invalid &&
+                  addAddressForm.get('state')?.touched
+                "
+              >
+                <span *ngIf="addAddressForm.get('state')?.hasError('required')"
+                  >State is required</span
+                >
+              </div>
+            </div>
+            <div class="form-group">
+              <label> Zip Code: </label>
+              <input
+                type="text"
+                formControlName="zip"
+                class="form-control"
+                required
+              />
+              <div
+                *ngIf="
+                  addAddressForm.get('zip ')?.invalid &&
+                  addAddressForm.get('zip ')?.touched
+                "
+              >
+                <span *ngIf="addAddressForm.get('zip ')?.hasError('required')"
+                  >Zip Code is required</span
+                >
+                <span *ngIf="addAddressForm.get('zip ')?.hasError('pattern')"
+                  >Zip Code must be 5 digits</span
+                >
+              </div>
+            </div>
+          </div>
+          <div class="mt-2">
+            <button type="submit" class="btn btn-primary">Save</button>
+            <button
+              type="button"
+              class="btn btn-link ms-3"
+              (click)="cancelSaveAddress()"
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </ng-template>
+</div>

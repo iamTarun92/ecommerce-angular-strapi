@@ -40,9 +40,15 @@ const routes: Routes = [
         canActivate: [AuthGuard],
         loadChildren: () => import('./wishlist/wishlist.module').then(m => m.WishlistModule)
       },
+      {
+        path: 'profile/addresses',
+        canActivate: [AuthGuard],
+        loadChildren: () => import('./profile/addresses/addresses.module').then(m => m.AddressesModule)
+      },
     ]
   },
   { path: 'wishlist', loadChildren: () => import('./wishlist/wishlist.module').then(m => m.WishlistModule) },
+  { path: 'profile/addresses', loadChildren: () => import('./profile/addresses/addresses.module').then(m => m.AddressesModule) },
 ];
 
 @NgModule({

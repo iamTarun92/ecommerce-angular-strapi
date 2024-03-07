@@ -18,7 +18,8 @@
     },
     "slug": {
       "type": "uid",
-      "required": true
+      "required": true,
+      "targetField": "name"
     },
     "image": {
       "type": "media",
@@ -44,11 +45,11 @@
       "type": "boolean"
     },
     "price": {
-      "type": "integer",
+      "type": "decimal",
       "required": true
     },
     "specialPrice": {
-      "type": "integer"
+      "type": "decimal"
     },
     "reviews": {
       "type": "relation",
