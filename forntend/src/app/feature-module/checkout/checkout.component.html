@@ -11,7 +11,7 @@
       </div>
     </div>
     <div class="col-12">
-      <!-- <div class="row">
+      <div class="row">
         <div class="col-6">
           <div class="card">
             <div class="card-header text-uppercase fw-bold">
@@ -171,20 +171,20 @@
                     </div>
                   </div>
                 </div>
-                <div class="form-check mb-2">
-                  <input
-                    type="checkbox"
-                    name="isDelivery"
-                    class="form-check-input"
-                    id="exampleCheck1"
-                    [checked]="isDelivery"
-                    (change)="copyBillingAddressToDelivery($event)"
-                  />
-                  <label class="form-check-label" for="exampleCheck1"
-                    >Delivery address same as the billing address</label
-                  >
-                </div>
               </form>
+              <div class="form-check mb-2">
+                <input
+                  type="checkbox"
+                  class="form-check-input"
+                  id="deliveryCheck"
+                  [checked]="isDelivery"
+                  [(ngModel)]="isDelivery"
+                  (change)="copyBillingAddressToDelivery($event)"
+                />
+                <label class="form-check-label" for="deliveryCheck"
+                  >Delivery address same as the billing address.</label
+                >
+              </div>
             </div>
           </div>
         </div>
@@ -355,7 +355,7 @@
             </div>
           </div>
         </div>
-      </div> -->
+      </div>
     </div>
 
     <div class="col-12">

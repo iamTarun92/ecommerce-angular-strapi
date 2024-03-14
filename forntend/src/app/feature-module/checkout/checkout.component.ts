@@ -83,6 +83,10 @@ export class CheckoutComponent implements OnInit {
       zipCode: ['', [Validators.required, Validators.pattern('[0-9]{5}')]]
     });
 
+    this.billingAddressForm.valueChanges.subscribe(changes => {
+      if (this.isDelivery)
+        this.deliveryAddressForm.patchValue(changes);
+    });
   }
 
   onSelectPaymentMethod(method: any) {
@@ -91,10 +95,8 @@ export class CheckoutComponent implements OnInit {
 
   copyBillingAddressToDelivery(event: any) {
     if (event.target.checked) {
-      this.isDelivery = true
       this.deliveryAddressForm.patchValue(this.billingAddressForm.value);
     } else {
-      this.isDelivery = false
       this.deliveryAddressForm.reset();
     }
   }
