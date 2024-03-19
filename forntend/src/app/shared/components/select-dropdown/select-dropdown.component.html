@@ -1,0 +1,12 @@
+<select
+  [id]="attribute.name"
+  [name]="attribute.name"
+  class="form-control"
+  [(ngModel)]="selectedAttribute"
+  (change)="setPrice(attribute)"
+>
+  <option value="" disabled>{{ attribute.name }}</option>
+  <option *ngFor="let option of attribute.options" [value]="option.value">
+    {{ option.description }}
+  </option>
+</select>

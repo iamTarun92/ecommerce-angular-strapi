@@ -15,7 +15,11 @@
           </div>
           <div class="reviews-counter">
             <app-star-rating
-              [rating]="filterReviewByUserEmail?filterReviewByUserEmail.attributes.note:selectedRating"
+              [rating]="
+                filterReviewByUserEmail
+                  ? filterReviewByUserEmail.attributes.note
+                  : selectedRating
+              "
               [readOnly]="true"
               name="rating-1"
             ></app-star-rating>
@@ -44,34 +48,24 @@
           </div>
         </div>
         <p>
-          {{ product.description }}
+          {{ product.attributes.description }}
         </p>
         <div class="row">
-          <div class="col-md-4">
-            <label for="size">Size</label>
-            <select id="size" name="size" class="form-control">
-              <option>S</option>
-              <option>M</option>
-              <option>L</option>
-              <option>XL</option>
-            </select>
+          <div class="col-md-4" *ngFor="let attribute of productAttributes">
+            <app-select-dropdown
+              [attribute]="attribute"
+              (setAttributeSelected)="onAttributeChange($event)"
+            ></app-select-dropdown>
           </div>
+
           <div class="col-md-4">
-            <label for="color">Color</label>
-            <select id="color" name="color" class="form-control">
-              <option>Blue</option>
-              <option>Green</option>
-              <option>Red</option>
-            </select>
-          </div>
-          <div class="col-md-4">
-            <label for="quantity">Quantity</label>
+            <label for="quantity">Quantity {{ quantity }}</label>
             <input
               type="number"
               min="1"
               name="quantity"
               id="quantity"
-              [value]="quantity"
+              [(ngModel)]="quantity"
               class="form-control form-control-sm"
             />
           </div>
@@ -141,7 +135,11 @@
           <p class="mb-0">Rating</p>
           <div class="reviews-counter d-inline-block">
             <app-star-rating
-              [rating]="filterReviewByUserEmail?filterReviewByUserEmail.attributes.note:selectedRating"
+              [rating]="
+                filterReviewByUserEmail
+                  ? filterReviewByUserEmail.attributes.note
+                  : selectedRating
+              "
               (ratingChanged)="onRatingChanged($event)"
               name="rating-2"
             ></app-star-rating>

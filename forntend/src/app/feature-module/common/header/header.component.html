@@ -18,11 +18,11 @@
       >
         <span class="me-3"
           ><i class="bi bi-basket me-2"></i
-          ><a class="text-muted" href="#"> Shipping</a></span
+          ><a class="text-muted" routerLink=""> Shipping</a></span
         >
         <span class="me-3"
           ><i class="bi bi-safe me-2"></i
-          ><a class="text-muted" href="#">Policy</a></span
+          ><a class="text-muted" routerLink="">Policy</a></span
         >
         <a
           *ngIf="!(isLoggedIn$ | async)"
@@ -44,7 +44,7 @@
   class="navbar navbar-expand-lg bg-white sticky-top navbar-light p-3 shadow-sm"
 >
   <div class="container">
-    <a class="navbar-brand" href="#"
+    <a class="navbar-brand" routerLink=""
       ><i class="fa-solid fa-shop me-2"></i> <strong>GEAR SHOP</strong></a
     >
     <button
@@ -78,21 +78,21 @@
           <a
             class="nav-link mx-2 text-uppercase active"
             aria-current="page"
-            href="#"
+            routerLink=""
             >Offers</a
           >
         </li>
         <li class="nav-item">
-          <a class="nav-link mx-2 text-uppercase" href="#">Products</a>
+          <a class="nav-link mx-2 text-uppercase" routerLink="">Products</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link mx-2 text-uppercase" href="#">Catalog</a>
+          <a class="nav-link mx-2 text-uppercase" routerLink="">Catalog</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link mx-2 text-uppercase" href="#">Services</a>
+          <a class="nav-link mx-2 text-uppercase" routerLink="">Services</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link mx-2 text-uppercase" href="#">About</a>
+          <a class="nav-link mx-2 text-uppercase" routerLink="">About</a>
         </li>
       </ul>
       <ul class="navbar-nav ms-auto">
@@ -109,7 +109,7 @@
           <div class="dropdown">
             <a
               class="btn btn-outline-primary mx-2 text-uppercase"
-              href="#"
+              routerLink=""
               data-bs-toggle="dropdown"
               ><i class="bi bi-person"></i> Account</a
             >

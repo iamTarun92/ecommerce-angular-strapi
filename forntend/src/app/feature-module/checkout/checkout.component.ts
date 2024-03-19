@@ -40,7 +40,8 @@ export class CheckoutComponent implements OnInit {
   randomNumber = this.otpArray[this.randomIndex];
   otp: any
   allAddress: AddressData[] = []
-  selectedAddress!: any | AddressAttributes;
+  billingAddress!: any | AddressAttributes;
+  deliveryAddress!: any | AddressAttributes;
 
   constructor(
     private fb: FormBuilder,
@@ -102,15 +103,16 @@ export class CheckoutComponent implements OnInit {
   }
 
   get isCheckedAddressForm() {
-    return this.billingAddressForm.valid && this.selectedPaymentMethod && this.otpCheck(+this.otp)
+    // return this.billingAddressForm.valid && this.selectedPaymentMethod && this.otpCheck(+this.otp)
+    return this.selectedPaymentMethod
   }
 
   isOrderConfirm() {
     const orderId = Math.floor(Math.random() * 1000) + '-' + Math.floor(new Date().getTime() / 1000);
     const transactionId = Math.floor(Math.random() * 1000) + '-' + Math.floor(new Date().getTime() / 1000);
     const address = {
-      billing: this.billingAddressForm.value,
-      deliver: this.deliveryAddressForm.value,
+      billing: this.billingAddress,
+      delivery: this.deliveryAddress,
     }
     const data = {
       "data": {
@@ -119,12 +121,13 @@ export class CheckoutComponent implements OnInit {
         "paymentMethod": this.selectedPaymentMethod,
         "products": this.cartItems,
         "address": address,
-        "name": this.billingAddressForm.value.fullName,
+        "name": this.billingAddress.fullName,
         "transactionId": transactionId.toString(),
         "amount": this.ItemTotalPrice,
         "couponId": this.couponId?.toString()
       }
     }
+
     this.apiService.addOrder(data).subscribe({
       next: (response) => {
         this.router.navigate(['orders'])
@@ -202,7 +205,8 @@ export class CheckoutComponent implements OnInit {
     this.apiService.fetchAddressByEmail(this.currentUser.email).subscribe({
       next: res => {
         this.allAddress = res.data
-        this.selectedAddress = this.allAddress?.find((address) => !!address.attributes.primary)?.attributes
+        this.billingAddress = this.allAddress?.find((address) => !!address.attributes.primary)?.attributes
+        this.deliveryAddress = this.allAddress?.find((address) => !!address.attributes.primary)?.attributes
       }
     })
   }
@@ -223,7 +227,10 @@ export class CheckoutComponent implements OnInit {
     return this.otpArray.includes(num)
   }
 
-  onAddressSelected(address: any) {
-    this.selectedAddress = address;
+  billingAddressSelected(address: any) {
+    this.billingAddress = address;
+  }
+  deliveryAddressSelected(address: any) {
+    this.deliveryAddress = address;
   }
 }

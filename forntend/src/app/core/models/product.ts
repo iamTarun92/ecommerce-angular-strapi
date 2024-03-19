@@ -2,6 +2,10 @@ export interface ProductRoot {
     data: ProductData[]
     meta: Meta
 }
+export interface ProductRoot2 {
+    data: ProductData
+    meta: Meta
+}
 
 export interface ProductData {
     id: number
@@ -20,7 +24,8 @@ export interface ProductAttributes {
     publishedAt: string
     image: Image
     categories: Categories
-    isFixedPrice:boolean
+    isFixedPrice: boolean
+    attributes: Attributes4[]
 }
 
 export interface Image {
@@ -81,6 +86,16 @@ export interface Attributes3 {
     createdAt: string
     updatedAt: string
     publishedAt: string
+}
+
+export interface Attributes4 {
+    name?: string
+    options?: Option[]
+}
+
+export interface Option {
+    value: string
+    description: string
 }
 
 export interface Meta {

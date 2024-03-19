@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
+import { Component, ViewChild, ElementRef, ChangeDetectorRef, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { CartService, WishlistService } from 'src/app/core/core.index';
@@ -13,7 +13,7 @@ import { ApiService } from 'src/app/core/services/common/api.service';
   templateUrl: './product-detail.component.html',
   styleUrls: ['./product-detail.component.scss']
 })
-export class ProductDetailComponent {
+export class ProductDetailComponent implements OnInit {
   @ViewChild('closeBtn') closeBtn!: ElementRef;
 
   id: any;
@@ -26,6 +26,11 @@ export class ProductDetailComponent {
   description = ''
   productId = 0
   allReview: ReviewData[] = []
+  selectedPrice = 0
+  productAttributes: any
+  basicPrice = 0
+  specialBasicPrice = 0
+  attributes: any[] = []
 
   constructor(
     private apiService: ApiService,
@@ -35,9 +40,8 @@ export class ProductDetailComponent {
     private wishListService: WishlistService,
     private authService: AuthService,
     private ref: ChangeDetectorRef
-  ) {
+  ) { }
 
-  }
   get isFormValid(): boolean {
     return this.selectedRating > 0 && this.description !== ''
   }
@@ -58,43 +62,6 @@ export class ProductDetailComponent {
       this.loadReviewByProductId(this.productId)
       this.loadProductById(this.productId)
     })
-  }
-
-  isItemExists(product: any): boolean {
-    return this.cartService.itemInCart(product)
-  }
-
-  updateItemQty(arr: any, item: any): void {
-    const existingItem = arr.find((cartItem: any) => cartItem.id === item.id);
-    if (existingItem) {
-      this.quantity = existingItem.quantity;
-    }
-
-  }
-
-  isItemExistsInWishlist(product: any): boolean {
-    return this.wishListItems?.findIndex((o: any) => parseInt(o.attributes.productId) === product.id) > -1;
-  }
-
-  hasFixedPrice(product: ProductData): boolean {
-    return this.cartService.hasFixedPrice(product)
-  }
-
-  hasSpecialPrice(product: ProductData): boolean {
-    return this.cartService.hasSpecialPrice(product)
-  }
-
-  calculateDiscountedPrice(originalPrice: number, discountPercentage: number): number {
-    return this.cartService.calculateDiscountedPrice(originalPrice, discountPercentage)
-  }
-
-  addToCart(product: any) {
-    product.quantity = this.quantity
-    this.cartService.addItemToCart(product)
-  }
-
-  removeFromCart(productId: number) {
-    this.cartService.removeItemFromCart(productId)
   }
 
   handleAddToWishList(userEmail: string, productId: string) {
@@ -120,7 +87,6 @@ export class ProductDetailComponent {
   handleRemoveWishList(productId: number) {
     alert('This product is already added.')
   }
-
   saveReview(reviewDescription: any) {
 
     const closeBtn = this.closeBtn.nativeElement as HTMLElement
@@ -137,7 +103,7 @@ export class ProductDetailComponent {
       this.apiService.updateReview(data, this.filterReviewByUserEmail.id).subscribe({
         next: (res) => {
           alert('Review added successfully.')
-          this.loadReviewByProductId(this.productId)          
+          this.loadReviewByProductId(this.productId)
           closeBtn.click()
           this.selectedRating = 0
           this.description = ''
@@ -154,9 +120,6 @@ export class ProductDetailComponent {
         }
       })
     }
-  }
-  onRatingChanged(rating: number) {
-    this.selectedRating = rating;
   }
   loadWishListItems() {
     this.wishListService.getWishlistItems().subscribe({
@@ -178,8 +141,13 @@ export class ProductDetailComponent {
   }
   loadProductById(id: number) {
     this.apiService.fetchProductById(id).subscribe({
-      next: (res: any) => {
+      next: (res) => {
+
         this.product = res.data
+        this.basicPrice = this.product.attributes.price
+        this.specialBasicPrice = this.product.attributes.specialPrice
+        this.productAttributes = this.product.attributes?.attributes
+
         if (this.cartService.getCartItems()) {
           this.updateItemQty(this.cartService.getCartItems(), this.product)
         }
@@ -192,4 +160,88 @@ export class ProductDetailComponent {
       }
     });
   }
+  isItemExists(product: any): boolean {
+    return this.cartService.itemInCart(product)
+  }
+  updateItemQty(arr: any, item: any): void {
+    const existingItem = arr.find((cartItem: any) => cartItem.id === item.id);
+    if (existingItem) {
+      this.quantity = existingItem.quantity;
+    }
+
+  }
+  isItemExistsInWishlist(product: any): boolean {
+    return this.wishListItems?.findIndex((o: any) => parseInt(o.attributes.productId) === product.id) > -1;
+  }
+  hasFixedPrice(product: ProductData): boolean {
+    return this.cartService.hasFixedPrice(product)
+  }
+  hasSpecialPrice(product: ProductData): boolean {
+    return this.cartService.hasSpecialPrice(product)
+  }
+  calculateDiscountedPrice(originalPrice: number, discountPercentage: number): number {
+    return this.cartService.calculateDiscountedPrice(originalPrice, discountPercentage)
+  }
+  addToCart(product: any) {
+    product.quantity = this.quantity
+    product.selectedAttributes = this.attributes
+    this.cartService.addItemToCart(product)
+  }
+  removeFromCart(productId: number) {
+    this.cartService.removeItemFromCart(productId)
+  }
+  onRatingChanged(rating: number) {
+    this.selectedRating = rating;
+  }
+  onAttributeChange(priceAttribute: any) {
+    const existingItemIndex = this.attributes.findIndex((attribute: any) => attribute.name === priceAttribute.name);
+    if (existingItemIndex !== -1) {
+      this.attributes[existingItemIndex] = priceAttribute
+    } else {
+      this.attributes.push(priceAttribute);
+    }
+
+    const totalPrice = this.attributes.reduce((acc, attribute) => acc + attribute.price, 0)
+    this.selectedPrice = totalPrice
+    this.updatePrice(this.selectedPrice)
+  }
+  updatePrice(price: number) {
+    this.product.attributes.price = this.basicPrice + price
+    if (this.product.attributes.specialPrice && this.product.attributes.isFixedPrice) {
+      this.product.attributes.specialPrice = this.specialBasicPrice + price
+    }
+  }
+
+
+  // updatePrice() {
+  //   const priceAttribute = this.product.attributes.attributes.price
+  //   const priceOption = priceAttribute.find((option: any) => option.size.includes(this.selectedSize) && option.color.includes(this.selectedColor));
+  //   if (priceOption) {
+  //     this.product.attributes.price = priceOption.value
+  //   }
+  //   if (priceOption && this.product.attributes.isFixedPrice) {
+  //     this.product.attributes.specialPrice = priceOption.value
+  //   }
+  // }
+  // customChange() {
+  //   const cartesian = (sets: any) => {
+  //     return sets.reduce(
+  //       (acc: any, curr: any) => {
+  //         return acc
+  //           .map((x: any) => {
+  //             return curr.map((y: any) => {
+  //               return x.concat([y]);
+  //             });
+  //           })
+  //           .flat();
+  //       },
+  //       [[]]
+  //     );
+  //   };
+  //   const attributeValues = this.product.attributes.map((attribute: any) =>
+  //     attribute.options.map((option: any) => option.value)
+  //   );
+  //   const variations = cartesian(attributeValues);
+  //   return variations
+  // }
 }

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, map, tap } from 'rxjs';
-import { ProductRoot } from '../../models/product';
+import { ProductData, ProductRoot,ProductRoot2 } from '../../models/product';
 import { CategoriesRoot } from '../../models/categories';
 import { OrderRoot } from '../../models/order';
 import { ReviewRoot } from '../../models/review';
@@ -35,9 +35,9 @@ export class ApiService {
         const url = `/products?populate=*`
         return this.http.get<ProductRoot>(this.baseUrl + url).pipe(map(data => data as ProductRoot))
     }
-    fetchProductById(id: number): Observable<ProductRoot> {
+    fetchProductById(id: number): Observable<ProductRoot2> {
         const url = `/products/${id}?populate=*`
-        return this.http.get<ProductRoot>(this.baseUrl + url).pipe(map(data => data as ProductRoot))
+        return this.http.get<ProductRoot2>(this.baseUrl + url).pipe(map(data => data as ProductRoot2))
     }
 
     fetchProductByCategoryId(categoryId: string): Observable<ProductRoot> {

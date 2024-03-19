@@ -26,8 +26,11 @@ export class CartService {
     addItemToCart(product: any): void {
         const existingItemIndex = this.cartItems.findIndex(cartItem => cartItem.id === product.id);
         if (existingItemIndex !== -1) {
+            alert("Product updated.")
             this.cartItems[existingItemIndex].quantity = product.quantity;
+            this.cartItems[existingItemIndex].selectedAttributes = product.selectedAttributes;
         } else {
+            alert("Product added.")
             this.cartItems.push(product);
         }
         this.saveCart()
