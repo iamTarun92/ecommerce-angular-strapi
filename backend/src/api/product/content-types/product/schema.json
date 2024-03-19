@@ -32,9 +32,6 @@
     "description": {
       "type": "text"
     },
-    "stockQuantity": {
-      "type": "string"
-    },
     "categories": {
       "type": "relation",
       "relation": "manyToMany",
@@ -56,6 +53,12 @@
       "relation": "oneToMany",
       "target": "api::review.review",
       "mappedBy": "product"
+    },
+    "attributes": {
+      "type": "json"
+    },
+    "stock": {
+      "type": "integer"
     }
   }
 }
