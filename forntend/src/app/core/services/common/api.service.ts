@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, map, tap } from 'rxjs';
-import { ProductData, ProductRoot,ProductRoot2 } from '../../models/product';
+import { ProductData, ProductRoot, ProductRoot2 } from '../../models/product';
 import { CategoriesRoot } from '../../models/categories';
 import { OrderRoot } from '../../models/order';
 import { ReviewRoot } from '../../models/review';
 import { AddressRoot } from '../../models/address';
+import { BannerRoot } from '../../models/banner';
 
 
 @Injectable({
@@ -90,5 +91,9 @@ export class ApiService {
     fetchAddressByEmail(email: string): Observable<AddressRoot> {
         const url = `${this.baseUrl}/addresses?filters[email][$eq]=${email}&populate=*`
         return this.http.get<AddressRoot>(url).pipe(map(data => data as AddressRoot))
+    }
+    fetchBanner(): Observable<BannerRoot> {
+        const url = `${this.baseUrl}/banners?populate=*`
+        return this.http.get<BannerRoot>(url).pipe(map(data => data as BannerRoot))
     }
 }
