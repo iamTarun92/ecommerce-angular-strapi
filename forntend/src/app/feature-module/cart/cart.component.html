@@ -28,8 +28,8 @@
                         <input
                           min="1"
                           name="quantity"
-                          [value]="cartItem.quantity"
-                          [(ngModel)]="cartItem.quantity"
+                          [value]="cartItem.attributes.quantity"
+                          [(ngModel)]="cartItem.attributes.quantity"
                           type="number"
                           class="form-control form-control-sm"
                           (change)="changeSubtotal()"
@@ -42,7 +42,7 @@
                           <ng-container *ngIf="hasFixedPrice(cartItem)">
                             <h6 class="mb-0">
                               ₹{{
-                                cartItem.quantity *
+                                cartItem.attributes.quantity *
                                   cartItem.attributes.specialPrice
                               }}
                             </h6>
@@ -50,7 +50,7 @@
                           <ng-container *ngIf="!hasFixedPrice(cartItem)">
                             <h6 class="mb-0">
                               ₹{{
-                                cartItem.quantity *
+                                cartItem.attributes.quantity *
                                   calculateDiscountedPrice(
                                     cartItem.attributes.price,
                                     cartItem.attributes.specialPrice
@@ -61,7 +61,7 @@
                         </ng-container>
                         <ng-template #hasSpecial>
                           <h6 class="mb-0">
-                            ₹{{ cartItem.quantity * cartItem.attributes.price }}
+                            ₹{{ cartItem.attributes.quantity * cartItem.attributes.price }}
                           </h6>
                         </ng-template>
                       </div>

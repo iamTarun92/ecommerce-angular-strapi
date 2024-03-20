@@ -58,7 +58,7 @@
                 </h6>
               </div>
               <div class="col-md-3 col-lg-3 col-xl-2 d-flex align-items-center">
-                <span class="me-2">{{ product.quantity }}</span>
+                <span class="me-2">{{ product.attributes.quantity }}</span>
                 <span class="me-2 fw-bold">x</span>
                 <ng-container
                   *ngIf="hasSpecialPrice(product); else singlePrice"
@@ -89,13 +89,13 @@
                 <ng-container *ngIf="hasSpecialPrice(product); else hasSpecial">
                   <ng-container *ngIf="hasFixedPrice(product)">
                     <h6>
-                      ₹{{ product.quantity * product.attributes.specialPrice }}
+                      ₹{{ product.attributes.quantity * product.attributes.specialPrice }}
                     </h6>
                   </ng-container>
                   <ng-container *ngIf="!hasFixedPrice(product)">
                     <h6>
                       ₹{{
-                        product.quantity *
+                        product.attributes.quantity *
                           calculateDiscountedPrice(
                             product.attributes.price,
                             product.attributes.specialPrice
@@ -173,7 +173,7 @@
       <button
         class="btn btn-primary float-end"
         [disabled]="!isCheckedAddressForm"
-        (click)="isOrderConfirm()"
+        (click)="orderConfirm()"
       >
         Confirm Order
       </button>

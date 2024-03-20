@@ -14,17 +14,17 @@
   "attributes": {
     "name": {
       "type": "string",
-      "required": true
+      "required": false
     },
     "slug": {
       "type": "uid",
-      "required": true,
+      "required": false,
       "targetField": "name"
     },
     "image": {
       "type": "media",
       "multiple": false,
-      "required": true,
+      "required": false,
       "allowedTypes": [
         "images"
       ]
@@ -43,7 +43,7 @@
     },
     "price": {
       "type": "decimal",
-      "required": true
+      "required": false
     },
     "specialPrice": {
       "type": "decimal"

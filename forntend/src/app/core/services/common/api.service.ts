@@ -40,10 +40,13 @@ export class ApiService {
         const url = `/products/${id}?populate=*`
         return this.http.get<ProductRoot2>(this.baseUrl + url).pipe(map(data => data as ProductRoot2))
     }
-
     fetchProductByCategoryId(categoryId: string): Observable<ProductRoot> {
         const url = `/products?filters[categories][id][$eq]=${categoryId}&populate=*`
         return this.http.get<ProductRoot>(this.baseUrl + url).pipe(map(data => data as ProductRoot))
+    }
+    updateProductBy(product: any,id:number): Observable<any> {
+        const url = `${this.baseUrl}/products/${id}?populate=*`
+        return this.http.put<any>(url, product)
     }
 
     fetchCategories(): Observable<CategoriesRoot> {

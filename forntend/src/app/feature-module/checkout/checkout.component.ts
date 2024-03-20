@@ -107,7 +107,7 @@ export class CheckoutComponent implements OnInit {
     return this.selectedPaymentMethod
   }
 
-  isOrderConfirm() {
+  orderConfirm() {
     const orderId = Math.floor(Math.random() * 1000) + '-' + Math.floor(new Date().getTime() / 1000);
     const transactionId = Math.floor(Math.random() * 1000) + '-' + Math.floor(new Date().getTime() / 1000);
     const address = {
@@ -128,12 +128,26 @@ export class CheckoutComponent implements OnInit {
       }
     }
 
+
     this.apiService.addOrder(data).subscribe({
       next: (response) => {
         this.router.navigate(['orders'])
         localStorage.removeItem('cartItems')
         localStorage.removeItem('couponCode')
         this.cartService.loadCart()
+        this.cartItems.forEach(productItem => {
+          console.log( productItem.id);
+          
+          const product = {
+            "data": {
+              "stock": productItem.attributes.stock,
+            }
+          }
+          this.apiService.updateProductBy(product, productItem.id).subscribe({
+            next: res => console.log('product updated')
+
+          })
+        });
       },
       error: (error) => alert('Error: ' + error.error.error.message)
 

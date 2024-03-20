@@ -27,8 +27,11 @@ export class CartService {
         const existingItemIndex = this.cartItems.findIndex(cartItem => cartItem.id === product.id);
         if (existingItemIndex !== -1) {
             alert("Product updated.")
-            this.cartItems[existingItemIndex].quantity = product.quantity;
-            this.cartItems[existingItemIndex].selectedAttributes = product.selectedAttributes;
+            this.cartItems[existingItemIndex].attributes.quantity = product.attributes.quantity;
+            this.cartItems[existingItemIndex].attributes.stock = product.attributes.stock;
+            if (this.cartItems[existingItemIndex].attributes.selectedAttributes) {
+                this.cartItems[existingItemIndex].attributes.selectedAttributes = product.attributes.selectedAttributes;
+            }
         } else {
             alert("Product added.")
             this.cartItems.push(product);
@@ -64,10 +67,10 @@ export class CartService {
 
     // Get total price sum
     getSubTotal(cartItems: any): number {
-        return cartItems.reduce((total: any, product: any) => total + (parseInt(!!product.attributes.specialPrice && product.attributes.isFixedPrice ? product.attributes.specialPrice : !!product.attributes.specialPrice && !product.attributes.isFixedPrice ? this.calculateDiscountedPrice(product.attributes.price, product.attributes.specialPrice) : product.attributes.price) * product.quantity), 0);
+        return cartItems.reduce((total: any, product: any) => total + (parseInt(!!product.attributes.specialPrice && product.attributes.isFixedPrice ? product.attributes.specialPrice : !!product.attributes.specialPrice && !product.attributes.isFixedPrice ? this.calculateDiscountedPrice(product.attributes.price, product.attributes.specialPrice) : product.attributes.price) * product.attributes.quantity), 0);
     }
     getTotalQuantity(arr: any): number {
-        return arr.reduce((total: any, product: any) => total + parseInt(product.quantity), 0);
+        return arr.reduce((total: any, product: any) => total + parseInt(product.attributes.quantity), 0);
     }
     hasFixedPrice(product: ProductData): boolean {
         return product.attributes.isFixedPrice

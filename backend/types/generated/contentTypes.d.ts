@@ -791,7 +791,7 @@ export interface ApiAddressAddress extends Schema.CollectionType {
   info: {
     singularName: 'address';
     pluralName: 'addresses';
-    displayName: 'address';
+    displayName: 'Address';
     description: '';
   };
   options: {
@@ -830,7 +830,7 @@ export interface ApiBannerBanner extends Schema.CollectionType {
   info: {
     singularName: 'banner';
     pluralName: 'banners';
-    displayName: 'banner';
+    displayName: 'Banner';
     description: '';
   };
   options: {
@@ -1020,9 +1020,9 @@ export interface ApiProductProduct extends Schema.CollectionType {
     draftAndPublish: true;
   };
   attributes: {
-    name: Attribute.String & Attribute.Required;
-    slug: Attribute.UID<'api::product.product', 'name'> & Attribute.Required;
-    image: Attribute.Media & Attribute.Required;
+    name: Attribute.String;
+    slug: Attribute.UID<'api::product.product', 'name'>;
+    image: Attribute.Media;
     description: Attribute.Text;
     categories: Attribute.Relation<
       'api::product.product',
@@ -1030,7 +1030,7 @@ export interface ApiProductProduct extends Schema.CollectionType {
       'api::category.category'
     >;
     isFixedPrice: Attribute.Boolean;
-    price: Attribute.Decimal & Attribute.Required;
+    price: Attribute.Decimal;
     specialPrice: Attribute.Decimal;
     reviews: Attribute.Relation<
       'api::product.product',
@@ -1062,7 +1062,7 @@ export interface ApiReviewReview extends Schema.CollectionType {
   info: {
     singularName: 'review';
     pluralName: 'reviews';
-    displayName: 'review';
+    displayName: 'Review';
     description: '';
   };
   options: {

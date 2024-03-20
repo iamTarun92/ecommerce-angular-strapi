@@ -59,15 +59,19 @@
           </div>
 
           <div class="col-md-4">
-            <label for="quantity">Quantity {{ quantity }}</label>
+            <!-- <label for="quantity">Quantity</label> -->
             <input
               type="number"
               min="1"
+              [max]="product.attributes.stock"
               name="quantity"
               id="quantity"
               [(ngModel)]="quantity"
               class="form-control form-control-sm"
             />
+            <p *ngIf="quantity === product.attributes.stock">
+              Maximam {{ quantity }} product is available.
+            </p>
           </div>
         </div>
         <div class="product-count d-flex align-items-end">

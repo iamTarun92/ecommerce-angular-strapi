@@ -166,7 +166,8 @@ export class ProductDetailComponent implements OnInit {
   updateItemQty(arr: any, item: any): void {
     const existingItem = arr.find((cartItem: any) => cartItem.id === item.id);
     if (existingItem) {
-      this.quantity = existingItem.quantity;
+      this.quantity = existingItem.attributes.quantity;
+      item
     }
 
   }
@@ -183,8 +184,9 @@ export class ProductDetailComponent implements OnInit {
     return this.cartService.calculateDiscountedPrice(originalPrice, discountPercentage)
   }
   addToCart(product: any) {
-    product.quantity = this.quantity
-    product.selectedAttributes = this.attributes
+    product.attributes.quantity = this.quantity
+    product.attributes.stock = product.attributes.stock - this.quantity
+    if (this.attributes.length) product.attributes.selectedAttributes = this.attributes
     this.cartService.addItemToCart(product)
   }
   removeFromCart(productId: number) {
