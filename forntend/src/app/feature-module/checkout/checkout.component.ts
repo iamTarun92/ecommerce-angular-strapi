@@ -131,13 +131,14 @@ export class CheckoutComponent implements OnInit {
 
     this.apiService.addOrder(data).subscribe({
       next: (response) => {
-        this.router.navigate(['orders'])
         localStorage.removeItem('cartItems')
         localStorage.removeItem('couponCode')
         this.cartService.loadCart()
+        this.authService.sendConfirmationEmail(this.currentUser, 'Your order placed successfully.').then(res => {
+          alert('Your order placed successfully. Please check your email to order details')
+          this.router.navigate(['orders'])
+        })
         this.cartItems.forEach(productItem => {
-          console.log( productItem.id);
-          
           const product = {
             "data": {
               "stock": productItem.attributes.stock,
@@ -145,7 +146,6 @@ export class CheckoutComponent implements OnInit {
           }
           this.apiService.updateProductBy(product, productItem.id).subscribe({
             next: res => console.log('product updated')
-
           })
         });
       },

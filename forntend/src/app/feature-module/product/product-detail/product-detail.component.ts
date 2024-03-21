@@ -46,7 +46,7 @@ export class ProductDetailComponent implements OnInit {
     return this.selectedRating > 0 && this.description !== ''
   }
   get filterReviewByUserEmail(): any {
-    return this.allReview.find((element) => element.attributes.author.data.attributes.email)
+    return this.allReview.find((element) => element.attributes?.author?.data?.attributes?.email)
   }
   get subTotalNote() {
     const notes = this.allReview.map(review => review.attributes.note);
