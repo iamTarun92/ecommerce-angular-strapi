@@ -12,7 +12,12 @@ import { AuthService } from 'src/app/core/services/auth/auth.service';
 export class LoginComponent implements OnInit {
   loginForm!: FormGroup;
 
-  constructor(private fb: FormBuilder, private apiService: ApiService, private router: Router, private authService: AuthService) { }
+  constructor(
+    private fb: FormBuilder,
+    private apiService: ApiService,
+    private router: Router,
+    private authService: AuthService
+  ) { }
 
   ngOnInit(): void {
     this.loginForm = this.fb.group({
@@ -21,12 +26,12 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  loginFormSubmit() {
-    this.authService.login(this.loginForm.value).subscribe({
+  onSubmit() {
+    const { identifier, password } = this.loginForm.value;
+
+    this.authService.login(identifier, password).subscribe({
       next: (response) => {
-        const { user } = response       
         this.loginForm.reset()
-        this.router.navigate(['category'])
       },
       error: (error) => alert('Error: ' + error.error.error.message)
 
