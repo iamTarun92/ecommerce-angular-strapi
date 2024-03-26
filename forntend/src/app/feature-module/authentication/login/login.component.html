@@ -12,11 +12,18 @@
             formControlName="identifier"
             class="form-control"
           />
+
           <div
-            *ngIf="loginForm.get('identifier')?.hasError('required')"
+            *ngIf="
+              loginForm.get('identifier')?.invalid &&
+              (loginForm.get('identifier')?.dirty ||
+                loginForm.get('identifier')?.touched)
+            "
             class="text-danger"
           >
-            Email is required.
+            <div *ngIf="loginForm.get('identifier')?.hasError('required')">
+              Email is required.
+            </div>
           </div>
         </div>
 
@@ -31,10 +38,16 @@
             class="form-control"
           />
           <div
-            *ngIf="loginForm.get('password')?.hasError('required')"
+            *ngIf="
+              loginForm.get('password')?.invalid &&
+              (loginForm.get('password')?.dirty ||
+                loginForm.get('password')?.touched)
+            "
             class="text-danger"
           >
-            Password is required.
+            <div *ngIf="loginForm.get('password')?.hasError('required')">
+              Password is required.
+            </div>
           </div>
         </div>
 
@@ -47,6 +60,12 @@
         </button>
         <a routerLink="/register" class="btn btn-outline-primary mt-4 ms-2">
           New User?
+        </a>
+        <a
+          routerLink="/forget-password"
+          class="btn btn-outline-primary mt-4 ms-2"
+        >
+          Forget your password?
         </a>
       </form>
     </div>

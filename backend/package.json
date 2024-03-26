@@ -13,6 +13,7 @@
     "@strapi/plugin-cloud": "4.19.1",
     "@strapi/plugin-i18n": "4.19.1",
     "@strapi/plugin-users-permissions": "4.19.1",
+    "@strapi/provider-email-nodemailer": "^4.21.0",
     "@strapi/strapi": "4.19.1",
     "better-sqlite3": "8.6.0",
     "mysql": "^2.18.1",

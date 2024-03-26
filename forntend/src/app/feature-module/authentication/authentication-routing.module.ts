@@ -18,10 +18,20 @@ const routes: Routes = [
       {
         path: 'register',
         loadChildren: () => import('./register/register.module').then(m => m.RegisterModule)
-      }
+      },
+      {
+        path: 'forget-password',
+        loadChildren: () => import('./forget-password/forget-password.module').then(m => m.ForgetPasswordModule)
+      },
+      {
+        path: 'reset-password/:token',
+        loadChildren: () => import('./reset-password/reset-password.module').then(m => m.ResetPasswordModule)
+      },
     ]
   },
-  { path: 'register', loadChildren: () => import('./register/register.module').then(m => m.RegisterModule) }];
+  { path: 'register', loadChildren: () => import('./register/register.module').then(m => m.RegisterModule) },
+  { path: 'forgetPassword', loadChildren: () => import('./forget-password/forget-password.module').then(m => m.ForgetPasswordModule) },
+  { path: 'resetPassword', loadChildren: () => import('./reset-password/reset-password.module').then(m => m.ResetPasswordModule) }];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
