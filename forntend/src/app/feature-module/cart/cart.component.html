@@ -61,7 +61,10 @@
                         </ng-container>
                         <ng-template #hasSpecial>
                           <h6 class="mb-0">
-                            ₹{{ cartItem.attributes.quantity * cartItem.attributes.price }}
+                            ₹{{
+                              cartItem.attributes.quantity *
+                                cartItem.attributes.price
+                            }}
                           </h6>
                         </ng-template>
                       </div>
@@ -75,7 +78,7 @@
                       </div>
                     </div>
 
-                    <hr class="my-4" />
+                    <hr class="my-4" *ngIf="i < cartItems.length - 1" />
                   </div>
                 </div>
                 <div class="col-lg-4 bg-light">
@@ -125,7 +128,7 @@
                           class="btn btn-outline-primary"
                           [disabled]="!couponCode"
                         >
-                          Apply Coupon
+                          Apply
                         </button>
                       </div>
                       <ng-container *ngIf="isMinOrder !== null">
