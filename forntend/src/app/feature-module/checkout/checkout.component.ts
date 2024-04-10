@@ -103,8 +103,7 @@ export class CheckoutComponent implements OnInit {
   }
 
   get isCheckedAddressForm() {
-    // return this.billingAddressForm.valid && this.selectedPaymentMethod && this.otpCheck(+this.otp)
-    return this.selectedPaymentMethod
+    return this.selectedPaymentMethod && this.otpCheck(+this.otp)
   }
 
   orderConfirm() {

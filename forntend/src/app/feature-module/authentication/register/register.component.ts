@@ -31,10 +31,15 @@ export class RegisterComponent {
     this.authService.signup(username, email, password).subscribe({
       next: response => {
         this.authService.sendConfirmationEmail(response.user, 'You have registered successfully.').then(res => {
+          this.signupForm.reset()
           alert('You have registered successfully')
+          this.router.navigateByUrl('/login')
         })
       },
-      error: error => alert('Error: ' + error.error.error.message)
+      error: error => {
+        alert('Error: ' + error.error.error.message)
+        this.signupForm.reset()
+      }
     });
   }
 

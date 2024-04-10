@@ -103,13 +103,13 @@
             Rate Product
           </button>
         </div>
-        <button
+        <a
           *ngIf="isItemExistsInWishlist(product)"
           class="btn btn-outline-danger mt-4 bi-heart-fill"
           routerLink="/wishlist"
         >
           Remove To Wishlist
-        </button>
+      </a>
         <button
           *ngIf="!isItemExistsInWishlist(product)"
           class="btn btn-outline-danger bi-heart mt-4"

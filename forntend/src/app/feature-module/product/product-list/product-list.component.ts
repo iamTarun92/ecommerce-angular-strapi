@@ -71,6 +71,8 @@ export class ProductListComponent implements OnInit {
 
   handleAddToWishList(userEmail: string, productId: string) {
     if (this.authService.getToken()) {
+      console.log(this.authService.getToken());
+      
       const data = {
         "email": userEmail,
         "productId": productId

@@ -136,6 +136,9 @@ export class ProductDetailComponent implements OnInit {
 
         const currentReview = this.filterReviewByUserEmail
         this.description = currentReview?.attributes.content
+        this.onRatingChanged(this.filterReviewByUserEmail
+          ? this.filterReviewByUserEmail.attributes.note
+          : this.selectedRating)
       }
     })
   }
