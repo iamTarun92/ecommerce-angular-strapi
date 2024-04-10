@@ -18,6 +18,7 @@ export class AddressSelectionComponent implements OnInit {
   editAddressForm!: FormGroup
   selectedAddress: any
   isEditFormSelected = false
+  selectedAddressIndex=0
 
   constructor(
     private fb: FormBuilder,

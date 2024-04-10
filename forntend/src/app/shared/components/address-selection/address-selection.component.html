@@ -1,16 +1,16 @@
 <ng-container *ngIf="!isEditFormSelected; else editForm">
   <div
     *ngFor="let address of addresses; let i = index"
-    class="mt-5 d-flex gap-4 align-items-center"
+    class="mt-5 d-flex gap-4 align-items-center justify-content-between"
   >
     <label class="d-flex gap-4" [for]="name + '-address-' + address.id">
       <input
         type="radio"
         [name]="name"
         [id]="name + '-address-' + address.id"
-        [value]="address.attributes.primary"
-        [checked]="address.attributes.primary"
-        (change)="onAddressSelected(address)"
+        [value]="address.id"
+        [checked]="selectedAddressIndex === i"
+        (change)="onAddressSelected(address); selectedAddressIndex = i"
       />
       <div class="address-details">
         <h6 class="d-flex gap-2">
@@ -24,8 +24,8 @@
       </div>
     </label>
     <button
-      *ngIf="addresses[i].id == selectedAddress?.id"
-      class="btn btn-outline-primary ms-5"
+      *ngIf="i === selectedAddressIndex"
+      class="btn btn-primary px-3"
       (click)="editAddress(address)"
     >
       Edit
