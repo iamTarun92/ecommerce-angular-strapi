@@ -70,18 +70,16 @@ export class ProductListComponent implements OnInit {
   }
 
   handleAddToWishList(userEmail: string, productId: string) {
-    if (this.authService.getToken()) {
-      console.log(this.authService.getToken());
-      
-      const data = {
-        "email": userEmail,
-        "productId": productId
+    const data = {
+      "email": userEmail,
+      "productId": productId
 
-      }
+    }
+    if (this.authService.getToken()) {
       this.wishListService.addToWishlist(data).subscribe({
         next: (res) => {
-          this.loadWishListItems()
           alert('Product added.')
+          this.loadWishListItems()
         },
         error: (error) => {
           alert('error')

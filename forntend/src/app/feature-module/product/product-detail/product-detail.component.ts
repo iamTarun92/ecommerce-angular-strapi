@@ -73,8 +73,8 @@ export class ProductDetailComponent implements OnInit {
     if (this.authService.getToken()) {
       this.wishListService.addToWishlist(data).subscribe({
         next: (res) => {
-          this.loadWishListItems()
           alert('Product added.')
+          this.loadWishListItems()
         },
         error: (error) => {
           alert('error')
